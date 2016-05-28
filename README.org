@@ -1,0 +1,23 @@
+
+* DIALOGUEA
+Commentaires de textes et débats collaboratifs
+
+** installation
+Cloner le dépôt DialoguEA
+
+installer libvips : =./install-libvips.sh=
+requis par sharp (https://github.com/lovell/sharp.git)
+
+Exécutez =npm install= pour installer les dépendances du serveur
+=bower install= pour les dépendances du frontend (vont dans =/public/dist/=)
+
+installer le package nodemon :
+
+    =npm install -g nodemon=
+
+** Démarrer le serveur
+
+=nodemon server=
+
+ou `run.sh` pour démarrer la boucle avec =forever= (cf =.foreverignore=)
+

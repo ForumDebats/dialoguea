@@ -1,0 +1,33 @@
+{
+  "name": "dialoguea-clientside",
+  "version": "0.0.3",
+  "authors": [
+    "Phil Estival <infos@caern.net>"
+  ],
+  "license": "GPL",
+  "dependencies": {
+    "angular": "1.4.5",
+    "angular-resource": "1.4.5",
+    "angular-messages": "1.4.5",
+    "angular-sanitize": "1.4.5",
+    "angular-animate": "1.4.5",
+    "angular-ui-router": "0.2.*",
+    "angular-translate": "latest",
+    "angular-touch": "1.4.5",
+    "Autolinker.js": "latest",
+    "bcryptjs": "*",
+    "bootstrap":"3.3",
+	"ckeditor": "#standard/4.4.6",
+	"ckeditor-markdown-plugin":"latest",
+    "angular-ckeditor": "latest",
+    "d3":"latest",
+    "jquery":"latest",
+    "lodash": "2.4",
+    "nanobar" : "latest",
+    "oclazyload":"https://github.com/ocombe/ocLazyLoad.git",
+    "pie-chart":"https://github.com/gajus/pie-chart.git",
+    "requirejs": "2.1",
+    "tinymce":"4.3.3",
+    "underscore":"latest"
+  }
+}
