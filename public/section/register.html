@@ -1,0 +1,62 @@
+<div class="alert alert-warning" ng-if="message">{{message}}</div>
+<div class="nouveau-compte" ng-show="!validated">
+	<div class="dialoguea-modal-header">Créer un compte Dialoguea</div>
+	<form name="registerForm" id="registerForm" ng-submit="submit()" novalidate>
+		<div class="dialoguea-modal-body">
+			<div class="form-group">
+				<label for="prenom">Prénom</label>
+				<input class="form-control" placeholder="" ng-model="user.prenom" type="text" id="prenom" name="prenom"
+				       ng-minlength="3" required/>
+
+				<div class="error-messages" ng-if="interacted(registerForm.prenom)" ng-messages="registerForm.prenom.$error">
+					<div ng-messages-include="form-messages"></div>
+					<div ng-message="required">Veuillez saisir un prénom</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="nom">Nom</label>
+				<input class="form-control" ng-model="user.nom" type="text" id="nom" name="nom" ng-minlength="3" required/>
+
+				<div class="error-messages" ng-if="interacted(registerForm.nom)" ng-messages="registerForm.nom.$error">
+					<div ng-messages-include="form-messages"></div>
+					<div ng-message="required">Veuillez saisir un nom</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input class="form-control" ng-model="user.email" type="text" name="email" id="email" required email-validator>
+
+				<div class="error-messages" ng-if="interacted(registerForm.email)" ng-messages="registerForm.email.$error">
+					<div ng-messages-include="form-messages"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="pass">Mot de passe </label><div class="small inline"> ( 8 caractères minimum )</div>
+				<input class="form-control" placeholder="Exemple : Durban2011#" ng-model="user.password" type="password"
+				       name="pass" id="pass" style="margin-bottom: 0px " required password-characters-validator minlength="8">
+				<div class="small inline">Force du mot de passe</div><ul id="strength" class=" inline" check-strength="user.password"></ul>
+				<div class="error-messages" ng-if="submitted" ng-messages="registerForm.pass.$error">
+					<div ng-messages-include="form-messages"></div>
+				</div>
+			</div>
+		</div>
+		<div class="dialoguea-modal-footer">
+			<input type="submit" class="greenbtn button btn" value="Créer un nouveau compte" ng-disabled="registerForm.$invalid">
+		</div>
+	</form>
+</div>
+<div class="alert alert-warning" ng-if="validated">Un email vous a été envoyé à <i>{{user.email}}</i>.<br/>
+	Consultez votre messagerie pour finaliser l'inscription.
+</div>
+<script type="text/ng-template" id="form-messages">
+	<div ng-message="required">Ce champs est obligatoire</div>
+	<div ng-message="minlength">La valeur de ce champs est trop courte</div>
+	<div ng-message="maxlength">The value for this field is too long</div>
+	<div ng-message="email">Cette addresse email n'est pas valide</div>
+	<div ng-message="email-valid">Cette addresse email n'est pas valide</div>
+	<div ng-message="pattern">You did not enter the value in the correct format</div>
+	<div ng-message="password-characters">
+		Votre mot de passe doit consister en caractère alphabétiques ou numériques.
+		Il doit aussi contenir au moins un caractères spécial, un chiffre et une lettre majuscule.
+	</div>
+</script>

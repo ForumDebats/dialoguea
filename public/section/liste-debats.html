@@ -1,0 +1,81 @@
+<section class="childrenSelectable ">
+
+	<div class='display:block'>
+		<table class="marron">
+			<tr>
+
+				<td>
+
+					<div class="right">
+
+						<table class="liste-debats">
+
+							<thead>
+							<tr>
+								<th></th>
+								<th></th>
+								<th>restitutions</th>
+								<th>posts</th>
+								<th>Dernier post</th>
+								<th></th>
+							</tr>
+							</thead>
+							<tbody ng-repeat="c in cats" class="space-bottom">
+							<tr>
+								<td></td>
+								<td rowspan="20">
+									<div class="catlist-item left">
+										<img ng-src="{{c.img}}"/>
+										<span class="display view">{{c.name}}</span>
+									</div>
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr ng-repeat="d in c.debats | orderBy:lastpostDate |limitTo:c.limit">
+								<td></td>
+								<td>
+									<a href="#/restitution/{{d._id}}">
+										<div class="temperature">
+											<div class="barcount" ng-if="d.posts">
+												<div class="sub-bar greensquare"
+												     style="width:{{ (100*d.daccords/d.posts) | number:0}}%"></div>
+												<div class="sub-bar redsquare"
+												     style="width:{{ (100*d.pasdaccords/d.posts) | number:0}}%"></div>
+												<div class="sub-bar bluesquare"
+												     style="width:{{( 100*d.pascompris/d.posts) | number:0}}%"></div>
+											</div>
+										</div>
+									</a>
+								</td>
+								<td align="right">[ {{d.posts}} ]</td>
+								<td>{{d.lastpostDate| date:'dd/MM/yy'}}</td>
+								<td><a class="marron" href="#/debat/{{d._id}}">{{d.titre | cut:true:85 }}</a></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan="4" class='bold marron' align="right">
+									<a ng-if="c.debats.length>6 && c.limit==defaultLimitList"
+									   href="#" class='' ng-mouseup="showAllDebates(c)">Voir la liste complète</a>
+										<span class="grey"> [ {{c.debats.length}} ] débats</span>
+								</td>
+
+							</tr>
+							<tr ng-repeat="r in range(c.debats.length,c.limit) track by $index ">
+								<td>&nbsp;</td>
+							</tr>
+
+
+							</tbody>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
+	</div>
+</section>
+
+

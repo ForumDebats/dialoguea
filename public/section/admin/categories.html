@@ -1,0 +1,175 @@
+
+<section class="admin-view childrenSelectable">
+
+	<div class="page-header">
+		<h3 class="d-ib" ng-if="statePrefix">Document à débattre</h3>
+
+		<h3 class="d-ib" ng-if="!statePrefix">Catégories de débats</h3>
+	</div>
+
+	<h3>
+		<button class="button btn addDocBtn" ng-click="C.status=C.NEW; C.newcat.name='';processing=false">
+			Ajouter une categorie
+		</button>
+	</h3>
+	<img class="loading" src="img/loading-sun.gif">
+
+	<div id="editCat" class="dialoguea-modal" ng-show="C.status==C.EDITIMG || C.status==C.NEW">
+		<div class="dialoguea-modal-half">
+			<div class="dialoguea-modal-content">
+				<div class="closecross" ng-click="cancelEdit()"></div>
+				<div class="dialoguea-modal-header">
+					{{ C.status==C.NEW ? "Nouvelle catégorie" : "Modifier la catégorie"}}
+				</div>
+				<div class="dialoguea-modal-body">
+					<div ng-include="'categoryForm'">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="delCat" class="dialoguea-modal" ng-show="C.status==C.DELETE">
+		<div class="dialoguea-modal-half" style="max-width:600px">
+			<div class="dialoguea-modal-content">
+				<div class="closecross" ng-click="cancelEdit()"></div>
+				<div class="dialoguea-modal-header">
+					<b>Suppression d'une catégorie</b>
+				</div>
+				<div class="dialoguea-modal-body">
+					<div class="yesno" style="float:left;max-width:300px">
+						Attention : tous les documents dans cette catégorie seront aussi supprimés.<br/><br/>
+						<b>Confirmer la suppression : </b><br/>
+						<br/>
+						<button class="button btn yes" ng-click="C.deleteCat(deletingCat)">Oui</button>
+						<button class="button btn no" ng-click="C.status=C.LISTING">Non</button>
+					</div>
+
+					<div class="cat-item" style="float:right">
+						<img id="catDelImg" class="centerdiv"
+						     src="{{deletingCat.img ? deletingCat.img : null}}"
+						     style="max-width:200px "
+						     err-src="/img/logo.png"/>
+						<span>{{deletingCat.name}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<ul class="cat-list">
+		<li ng-repeat="c in C.cat" ng-class="{editing: c == C.editedCat}">
+			<a ng-click="c == C.editedCat ? processing=false : opencat(c._id)">
+				<div class="cat-item">
+
+					<img ng-src="{{c.img}}"/>
+					<span class="display view">{{c.name}}</span>
+
+					<form name="cat">
+						<input class="edit" type="text" id="{{c._id}}" name="name" ng-model="c.name"
+						       ng-escape="C.revertEditing(c, cat.name)"
+						       ng-enter="C.doneEditing(c, cat.name)"
+						       ng-blur="C.revertEditing(c, cat.name)"/>
+					</form>
+					<div class="editBtn" ng-click="C.editCatName(c)" ng-show="c!=C.editedCat"></div>
+				</div>
+			</a>
+			<button class="button btn editImg modCatImg" ng-click="editCat(c)" ng-disabled="processing">Modifier</button>
+			<button class="button btn editImg delCatImg" ng-click="confirmDeleteCat(c)">Supprimer</button>
+
+			<span class="grey">{{c.nbDocs}} documents</span>
+		</li>
+	</ul>
+
+
+	<script type="text/ng-template" id="categoryForm">
+		<form id="addCat" class="d-b newcat">
+
+			<ul class="cat-list">
+				<li style="float:right">
+					<div class="cat-item">
+						<img id="catImg" class="centerdiv"
+						     ng-src="{{C.newcat.img}}"
+						     style="max-width:200px "
+						     src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+						     err-src="/img/logo.png"/>
+
+						<span>{{C.newcat.name}}</span>
+					</div>
+				</li>
+			</ul>
+
+			<input ng-model="C.newcat.name" type="text" class="bigfield" placeholder="Nom de la catégorie" maxlength="32"/>
+
+			<div class="tab-header">
+				<ul>
+					<li ng-repeat="tab in tabs"
+					    ng-class="{active:isActiveTab(tab.url)}"
+					    ng-click="onClickTab(tab)">{{tab.title}}
+					</li>
+				</ul>
+			</div>
+			<div class="tab-content">
+				<div ng-include="currentTab"></div>
+			</div>
+
+			<!--<textarea ng-model="C.newcat.desc" id="catdesc" class="selectable" style="width:450px;"
+						placeholder="Description ...">
+			</textarea><br/>-->
+			<button ng-click="C.status==C.EDITIMG ? C.saveCat() : C.addCat()"
+			        class="button btn yesover inline" type="submit"
+			        ng-disabled="processing || C.newcat.name==''"> {{C.status==C.EDITIMG ? "Enregistrer" : "Ajouter cette catégorie"}}
+			</button>
+			<button class="button btn" ng-click="cancelEdit();$event.stopPropagation()">Annuler</button>
+			{{C.errmsg}}
+		</form>
+	</script>
+
+
+	<script type="text/ng-template" id="byURL.tpl.html">
+		<div id="imageUrlTab">
+			<input ng-model="C.newcat.byUrlImg" type="text" class="bigfield" placeholder="URL"
+			       ng-change="C.newcat.upload=false; setImg(C.newcat.byUrlImg)"
+			       style="width:450px;" size="120"/><br/>
+
+			<div class="redtext"> {{U.uploadErrmsg}}</div>
+		</div>
+	</script>
+
+
+	<script type="text/ng-template" id="upFILE.tpl.html">
+		<div id="uploadImageTab">
+			<div ng-controller="FileUploadCtrl">
+				<form id="addList" class="add-list" ng-show="addlistshow===2">
+
+					<input id="selectedFile" type="text" value="Sélectionner un fichier..."
+					       class="grey bigfield"
+					       onclick="javascript:document.getElementById('file').click();">
+
+					<input id="file" type="file" style='display: none;' name="file"
+					       accept="image/*"
+					       onchange="angular.element(this).scope().setFiles(this,'selectedFile')"/>
+
+					<button class="button greenbtn btn" type="button"
+					        ng-disabled="processing==true"
+					        ng-click="processing=true;uploadFile('upimgcategory')"
+					        ng-show="fileSelected"> Envoyer
+					</button>
+					<div class="redtext"> {{ U.listErrMsg }}</div>
+					<!-- <div ng-show="progressVisible">
+							<div class="percent">{{progress}}%</div>
+							<div class="progress-bar">
+								<div class="uploaded" ng-style="{'width': progress+'%'}"></div>
+							</div>
+						</div>-->
+					<div class="redtext"> {{U.uploadErrmsg}}</div>
+				</form>
+			</div>
+		</div>
+	</script>
+
+</section>
+
+
+

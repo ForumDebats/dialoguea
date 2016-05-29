@@ -1,0 +1,69 @@
+<div class="dialoguea-modal-new-argumentation selectable" ng-hide="loading">
+	<div class="dialoguea-modal-content">
+		<form name="newArgumentationForm" novalidate>
+			<div class="dialoguea-modal-header">Mon Argumentation</div>
+			<div class="dialoguea-modal-body">
+				<div class="argumentation-card-citation">{{ A.newcmt.citation | cut:true:650}}</div>
+
+				<div class="form-group">
+					<label for="reformulation" class="is-required">
+						Reformuler <span title="Champ requis" class="is-required-symbol">*</span>
+                        <span class="label-alert"
+                              ng-if="newArgumentationForm.reformulation.$touched && newArgumentationForm.reformulation.$error.required">
+                            Vous devez remplir ce champ</span>
+					</label>
+                    <textarea class="form-control textselectable" rows="5" ng-model="A.newcmt.reformulation"
+                              name="reformulation" id="reformulation" required autofocus></textarea>
+				</div>
+
+				<div class="form-group">
+					<label class="is-required">
+						Avis <span title="Champ requis" class="is-required-symbol">*</span>
+						<span class="label-alert"
+						      ng-if="newArgumentationForm.reformulation.$touched && newArgumentationForm.argumentation.$touched && newArgumentationForm.avis.$error.required">
+							Vous devez choisir un avis</span>
+					</label>
+
+					<div class="noselect vote cf">
+						<label class="checkbox checkbox--daccord" for="daccord">
+							<input ng-model="A.newcmt.avis" type="radio" name="avis" value="0" id="daccord" required>
+
+							<div class="checkbox-content">D'accord</div>
+						</label>
+
+						<label class="checkbox checkbox--pasdaccord" for="pasdaccord">
+							<input ng-model="A.newcmt.avis" type="radio" name="avis" value="1" id="pasdaccord" required>
+
+							<div class="checkbox-content">Pas d'accord</div>
+						</label>
+
+						<label class="checkbox checkbox--pascompris" for="pascompris">
+							<input ng-model="A.newcmt.avis" type="radio" name="avis" value="2" id="pascompris" required>
+
+							<div class="checkbox-content">Pas compris</div>
+						</label>
+					</div>
+
+				</div>
+
+				<div class="form-group">
+					<label for="argumentation" class="is-required">
+						Argumenter <span title="Champ requis" class="is-required-symbol">*</span>
+						<span class="label-alert"
+						      ng-if="newArgumentationForm.argumentation.$touched && newArgumentationForm.argumentation.$error.required">
+							Vous devez remplir ce champ</span>
+					</label>
+					<textarea class="form-control textselectable" rows="5" ng-model="A.newcmt.argumentation" name="argumentation"
+					          id="argumentation" required></textarea>
+
+				</div>
+			</div>
+			<div class="dialoguea-modal-footer">
+				<button class="button btn cancel" onmouseup="A.closeNewCommentModal(newArgumentationForm)">Annuler</button>
+				<button class="button btn ok" name='EnvoiCmt' ng-disabled="newArgumentationForm.$invalid || A.processing"
+				        ng-click="A.processing=true; A.prepostcomment(newArgumentationForm)">OK
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

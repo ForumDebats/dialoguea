@@ -1,0 +1,63 @@
+<!-- {{panel.tab}} -->
+<section class="admin-view childrenSelectable">
+
+	<div ng-init="addgrpshow=1">
+
+		<div class="page-header">
+			<h3 class="d-ib">Liste des groupes</h3>
+		</div>
+
+		<button id="createGrp" class='button btn'
+		        ng-click="addgrpshow=2"
+		        ng-show="addgrpshow===1">
+			Ajouter un groupe
+		</button>
+
+		<form id="addGrp"
+		      ng-submit="G.addGrp();addgrpshow=1"
+		      ng-show="addgrpshow===2">
+
+			<input class="bigfield"
+			       ng-model="G.newGroup"
+			       type="text" id="grpName"
+			       placeholder="Nom du groupe">
+
+			<button class="button btn" type="submit" ng-disabled="!G.newGroup">Ajouter ce groupe</button>
+			{{G.errmsg}}
+		</form>
+
+		<img class="loading" src="img/loading-lines.gif">
+		<table class="group-list">
+
+			<tr class="group-item" ng-repeat="g in G.groups | orderBy:'+name'" >
+				<td class="select" ng-class="{'item-validator':validation=='yes' && !g.selected}" >
+					<div ng-if="validation=='yes'" style="height: 40px; overflow:hidden;">
+						<img ng-show="g.selected" class="validate validated" src="/img/validate1.png"
+						     ng-click="G.toggleGroup(g);$event.stopPropagation()" >
+						<img ng-show="!g.selected" class="validate hover-show" src="/img/validate0.png"
+						     ng-click="G.toggleGroup(g);$event.stopPropagation()" >
+
+					</div>
+					</td>
+				<td ng-click='openGroup(g._id)'>
+
+						<b>{{g.name}}</b>
+						[
+						<ng-pluralize class="" count="g.membres.length"
+						              when="{'0': '0 personne','1': '{} personne', 'other': '{} personnes'}">
+						</ng-pluralize>
+						]
+					<br/>
+					<ng-pluralize class="grey" count="g.openDebates"
+					              when="{'0': 'aucun débat ouvert','1': '1 débat ouvert', 'other': '{} débats ouverts'}">
+					</ng-pluralize>,
+
+					<ng-pluralize class="grey" count="g.closedDebates"
+					              when="{'0': 'aucun débat clos','1': '1 débat clos', 'other': '{} débats clos'}">
+					</ng-pluralize>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</section>

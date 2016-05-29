@@ -1,0 +1,11 @@
+
+<div class="user-info animate" ng-if="loggedIn" >
+    <h2 class="user-info-username">{{user.prenom}} {{user.nom}}</h2>
+    <a ng-click="disco()" translate="LOGOUT">se déconnecter</a><br/>
+</div>
+
+<div class="user-info" ng-if="!loggedIn">
+    <a ng-click="connect()" translate="LOGIN">se connecter</a><br/>
+</div>
+
+<div style="float:right;margin-right:50px;" ng-if="L.panel!=''" class="animate" ng-bind-html="L.panel"></div>

@@ -1,0 +1,130 @@
+<div class="dialoguea-modal-new-argumentation selectable" ng-hide="loading" style="top:0px;left:{{ A.windowWidth/2 - 805/2 }}px ; position:absolute">
+	<div class="dialoguea-modal-content" >
+		<form name="newArgumentationForm" novalidate>
+			<div class="dialoguea-modal-header" onMouseDown="drag(this.parentNode.parentNode.parentNode, event);">Mon Argumentation</div>
+			<div class="dialoguea-modal-body">
+				<div class="argumentation-card-citation">{{ A.newcmt.citation | cut:true:650}}</div>
+
+				<div class="form-group">
+					<label for="reformulation" class="is-required">
+						Reformuler <span title="Champ requis" class="is-required-symbol">*</span>
+                        <span class="label-alert"
+                              ng-if="newArgumentationForm.reformulation.$touched && newArgumentationForm.reformulation.$error.required">
+                            Vous devez remplir ce champ</span>
+					</label>
+                    <textarea class="form-control textselectable verticalresize" rows="5" ng-model="A.newcmt.reformulation"
+                              name="reformulation" id="reformulation" required autofocus></textarea>
+				</div>
+
+				<div class="form-group">
+					<label class="is-required">
+						Avis <span title="Champ requis" class="is-required-symbol">*</span>
+						<span class="label-alert"
+						      ng-if="newArgumentationForm.reformulation.$touched && newArgumentationForm.argumentation.$touched && newArgumentationForm.avis.$error.required">
+							Vous devez choisir un avis</span>
+					</label>
+
+					<div class="noselect vote cf">
+						<label class="checkbox checkbox--daccord" for="daccord">
+							<input ng-model="A.newcmt.avis" type="radio" name="avis" value="0" id="daccord" required>
+
+							<div class="checkbox-content">D'accord</div>
+						</label>
+
+						<label class="checkbox checkbox--pasdaccord" for="pasdaccord">
+							<input ng-model="A.newcmt.avis" type="radio" name="avis" value="1" id="pasdaccord" required>
+
+							<div class="checkbox-content">Pas d'accord</div>
+						</label>
+
+						<label class="checkbox checkbox--pascompris" for="pascompris">
+							<input ng-model="A.newcmt.avis" type="radio" name="avis" value="2" id="pascompris" required>
+
+							<div class="checkbox-content">Pas compris</div>
+						</label>
+					</div>
+
+				</div>
+
+				<div class="form-group">
+					<label for="argumentation" class="is-required">
+						Argumenter <span title="Champ requis" class="is-required-symbol">*</span>
+						<span class="label-alert"
+						      ng-if="newArgumentationForm.argumentation.$touched && newArgumentationForm.argumentation.$error.required">
+							Vous devez remplir ce champ</span>
+					</label>
+					<textarea class="form-control textselectable verticalresize" rows="5" ng-model="A.newcmt.argumentation" name="argumentation"
+					          id="argumentation" required></textarea>
+
+				</div>
+
+				<button ng-show="A.addmedia==false" class="button btn ok" onmouseup="A.addmedia=true"> Ajouter un media</button>
+				<div ng-show="A.addmedia">
+					<div class="tab-header">
+						<ul>
+							<li ng-repeat="tab in tabs"
+							    ng-class="{active:isActiveTab(tab.url)}"
+							    ng-click="onClickTab(tab)">{{tab.title}}
+							</li>
+						</ul>
+					</div>
+					<div class="tab-content">
+						<div ng-include="currentTab"></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="dialoguea-modal-footer">
+				<button class="button btn cancel" onmouseup="A.closeNewCommentModal(newArgumentationForm)"> Annuler
+				</button>
+				<button class="button btn ok" name='EnvoiCmt'
+				        ng-disabled="newArgumentationForm.$invalid || A.processing || A.newcmt.timeout"
+				        ng-click="A.processing=true; A.postcomment(newArgumentationForm)"> OK
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script type="text/ng-template" id="byURL.tpl.html">
+	<div id="imageUrlTab">
+		<input ng-model="C.newcat.byUrlImg" type="text" class="bigfield" placeholder="URL"
+		       ng-change="C.newcat.upload=false; setImg(C.newcat.byUrlImg)"
+		       style="width:450px;" size="120"/><br/>
+
+		<div class="redtext"> {{U.uploadErrmsg}}</div>
+	</div>
+</script>
+
+
+<script type="text/ng-template" id="upFILE.tpl.html">
+	<div id="uploadImageTab">
+		<div ng-controller="FileUploadCtrl">
+			<form id="addList" class="add-list" ng-show="addlistshow===2">
+
+				<input id="selectedFile" type="text" value="Sélectionner un fichier..."
+				       class="grey bigfield"
+				       onclick="javascript:document.getElementById('file').click();">
+
+				<input id="file" type="file" style='display: none;' name="file"
+				       accept="image/*"
+				       onchange="angular.element(this).scope().setFiles(this,'selectedFile')"/>
+
+				<button class="button greenbtn btn" type="button"
+				        ng-disabled="processing==true"
+				        ng-click="processing=true;uploadFile('/updebatmedia')"
+				        ng-show="fileSelected"> Envoyer
+				</button>
+				<div class="redtext"> {{ U.listErrMsg }}</div>
+				<!-- <div ng-show="progressVisible">
+						<div class="percent">{{progress}}%</div>
+						<div class="progress-bar">
+							<div class="uploaded" ng-style="{'width': progress+'%'}"></div>
+						</div>
+					</div>-->
+				<div class="redtext"> {{U.uploadErrmsg}}</div>
+			</form>
+		</div>
+	</div>
+</script>

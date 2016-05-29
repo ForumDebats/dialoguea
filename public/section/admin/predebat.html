@@ -1,0 +1,35 @@
+
+<section>
+    {{P.errmsg}}
+    <div id="Dialoguea" class="cf">
+        <div class="document-view">
+            <div class="view-header">
+                <h3 class="view-title">{{P.doc.auteur}}, <b><i>{{P.doc.titre}}</i></b></h3>
+            </div>
+            <div id="document-view-text">
+                <article class="doc-view selectable"
+                         onmousedown=""
+                         ng-mousedown=""
+                         ng-mouseup=""
+                         ng-bind-html="P.htmld"></article>
+            </div>
+        </div>
+
+        <div id="discussion-view">
+            <div class="view-header">
+                <section>
+                    {{P.errmsg}}
+                    <div class="yesno">
+                        <p>Ce débat n'est pas encore ouvert.<br/>
+                            Souhaitez-vous ouvrir ce débat au groupe <b>{{P.group.name}}</b> ?</p>
+                        <button class="button btn yes" ng-click="P.openDebat()">Oui</button>
+                        <button class="button btn no" onclick="history.back()">Non</button>
+                    </div>
+                </section>
+            </div>
+
+
+        </div>
+    </div>
+
+</section>

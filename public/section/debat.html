@@ -1,0 +1,65 @@
+<section class="wider-container" ng-class={'loadingcursor':loading}>
+	{{A.errmsg}}
+	<div id="Dialoguea" class="cf">
+		<div class="document-view">
+			<div class="view-header">
+				<h3 class="view-title">{{A.rootCmt.citation}}, <b><i>{{A.rootCmt.reformulation}}</i></b>
+					<span ng-if="A.debat.status==-1">&nbsp;&nbsp; <b>Débat Clôt le {{A.debat.dateFermeture | date:'dd/MM/yy'}}</b></span>
+				</h3>
+
+				<div class="view-title-info">(sélectionner dans le texte pour argumenter)</div>
+			</div>
+			<div id="document-view-text">
+				<article id={{A.rootCmt._id}} class="doc-view selectable"
+				         ng-mouseup="A.selectItem($event,A.rootCmt)"
+				         ng-bind-html="A.htmld"></article>
+
+				<div class="document-view-margin">
+					<div ng-repeat="note in A.cmts.notes"
+					     class="margin-note"
+					     ng-class="{'green': note.avis == 0, 'red': note.avis == 1, 'blue': note.avis == 2,'margin-hypos':note.avis == 3}"
+					     ng-mouseover="A.onOverNote(note,A.rootCmt)"
+					     ng-mouseout="A.onLeaveNote(note,A.rootCmt)"
+					     ng-click="A.scrollToComment(note.id)"
+					     style="top:{{note.pos.top}}px;left:{{note.pos.left}}px">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="discussion-view">
+			<div class="view-header">
+				<h3 class="view-title">Débat </h3>
+				<a ng-show="loggedIn" class="invitation" ng-click="A.openInvite()" translate="SEND_INVITE">Envoyer une invitation</a>
+				<div class="view-title-info">(sélectionner dans “A” — Argumentaire — pour débattre)</div>
+				<!--<img class="loading" src="img/loading-sun.gif">-->
+			</div>
+
+			<div id="debat" class="argumentations" keep-scroll>
+				<ol class="tree-nodes" ng-model="A.cmts.children" id="tree-root">
+					<li class="tree-node"
+					    ng-repeat="item in A.cmts.children | orderBy:'date':true"
+					    ng-include="'section/argumentation-card.html'" scroll-item></li>
+				</ol>
+			</div>
+		</div>
+	</div>
+
+	<div id="argumentForm"
+	     class="dialoguea-modal"
+	     ng-show="A.status==A.ADDINGCMT||A.status==A.EDITCMT"
+	     ng-include="'section/argument-form.html'">
+	</div>
+
+	<div id="hypostaseForm"
+	     class="dialoguea-modal"
+	     ng-show="A.status==A.HYPOSTASE||A.status==A.EDITHYPOSTASE"
+	     ng-include="'section/hypostase-form.html'">
+	</div>
+
+	<div ng-if="invitationVisible"
+	     class="dialoguea-modal" id="invitation" >
+		<div ng-include="'section/invitation.html'"></div>
+	</div>
+
+</section>

@@ -1,0 +1,17 @@
+
+!.gitkeep
+node_modules/
+public/dist
+upload/*
+tmp/
+logs/*
+public/index.html
+public/cat/*
+Dialoguea.min.js.report.txt
+settings.js
+server/views/adminmodule.js
+Dialoguea.js
+
+npm-debug.log
+.DS_Store
+.idea

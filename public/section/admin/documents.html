@@ -1,0 +1,111 @@
+<section class="admin-view childrenSelectable">
+
+	<div class="left cat-item-document" style="margin-right:15px"><img ng-src="{{D.cat.img}}"></div>
+
+	<div class="inline" style="width: calc(100% - 220px);">
+		<br ng-if="selector"/>
+		> <a ui-sref="{{statePrefix+'categories' }}" class="grey"> Categories </a>
+		<a ui-sref="{{statePrefix+'docList({catId:D.cat._id })' }}" ng-class="isActiveTab(D.LISTING)?'inactive black':'grey'"
+		   ng-click="onClickTab(D.LISTING)"> {{'> '+ D.cat.name }}
+		</a>
+		<div class="inline black" ng-show="isActiveTab(D.EDITION)">
+			{{'> '+ D.editedDoc.titre1 +", "+D.editedDoc.titre2 }}
+		</div>
+		<br/>
+
+		<hr/>
+
+		<div class="content">
+			<div ng-include="currentTab.url"></div>
+		</div>
+	</div>
+
+	<script type="text/ng-template" id="doclist.tpl.html">
+		<button class="button btn addDocBtn" ng-click="onClickTab(D.NEWDOC)">
+			Ajouter un Document
+		</button>
+
+		<h4 ng-if="D.docs.length">Documents</h4>
+
+		<table class="doc-list">
+			<tr class="doc-item" ng-repeat="d in D.docs | orderBy:'+titre1'">
+				<td class="select" ng-class="{'item-validator':selector && d!=selectedDoc} ">
+					<div ng-if="selector">
+						<img ng-if="d==selectedDoc" class="validate validated" src="/img/validate1.png"
+						     ng-click="D.selectDoc(d)" >
+						<img ng-if="d!=selectedDoc" class="validate hover-show" src="/img/validate0.png"
+						     ng-click="D.selectDoc(d)" >
+					</div>
+					<a ng-click="D.editDoc(d);"><!--  ui-sref="{{statePrefix+'doc({docId:d._id }'}}">-->
+						<!--href="#/groupe/{{g._id}}">-->
+						{{d.titre1+", "+d.titre2}}
+					</a>
+					<div class="destroy" ng-click="CONFIRM=true"></div>
+					<!--<button class="btn destroy" ng-click="D.removeDoc(doc)">delete</button>-->
+
+					<div class="yesno" ng-show="CONFIRM">
+						Confirmer la suppression de ce document ?
+						<button class="button btn yes" ng-click="D.removeDoc(d)">Oui</button>
+						<button class="button btn no" ng-click="CONFIRM=false">Non</button>
+					</div>
+					<!--<ng-pluralize class="grey" count="d.closedDebats"
+					              when="{'0': 'aucun debat clos','1': '1 debat ouvert', 'other': '{} debats ouverts'}">
+					</ng-pluralize>
+					,
+					<ng-pluralize class="grey" count="d.openDebats"
+					              when="{'0': 'aucun debat ouvert','1': '1 debat ouvert', 'other': '{} debats ouverts'}">
+					</ng-pluralize>-->
+				</td>
+			</tr>
+		</table>
+	</script>
+
+
+	<script type="text/ng-template" id="newdoc.tpl.html">
+		<form id="addDoc" class="doc-edit">
+			<h4>Nouveau document</h4>
+			<input class="bigfield newdoc" ng-model="D.newDoc.titre1" type="text" placeholder="Source, auteur, rubrique, ..." maxlength="150" required/>
+			<input class="bigfield newdoc" ng-model="D.newDoc.titre2" type="text" placeholder="Nom du document" maxlength="150" required/>
+
+			<button class="button btn yesover" type="submit" ng-click="D.addDoc()">Enregistrer</button>
+			<div class="redtext"> {{D.errmsg}} </div>
+			<!--<button class="button btn noover" ng-click="D.status=D.LISTING">Annuler</button>-->
+			<div class="doc-container" style="height:100%">
+            <textarea ui-tinymce="tinymceAdminOption"
+                      ng-model="D.newDoc.texte"
+                      id="tiny-edit-admin"
+                      class="d-b selectable"
+                      placeholder="Entrez le texte ...">
+            </textarea>
+			</div>
+		</form>
+	</script>
+
+	<script type="text/ng-template" id="editdoc.tpl.html">
+		<form id="editDoc" class="doc-edit">
+			<input class="bigfield newdoc"  ng-model="D.editedDoc.titre1" type="text" placeholder="Source, auteur, rubrique, ..." required/>
+			<input class="bigfield newdoc"  ng-model="D.editedDoc.titre2" type="text" placeholder="Nom du document" required/>
+
+			<button class="button btn yesover" type="submit"
+			        ng-disabled="submitted && !invitationForm.email.$valid"
+			        ng-click="D.doneEditing(); D.status=D.LISTING">Enregistrer
+			</button>
+			<button class="button btn noover" ng-click="D.revertEditing()">Annuler</button>
+			{{D.errmsg}}
+			<div class="doc-container" style="height:100%" >
+		          <textarea ui-tinymce="tinymceAdminOption"
+		                    ng-model="D.editedDoc.texte"
+		                    id="tiny-new-admin"
+		                    class="d-b selectable"
+		                    placeholder="Entrez le texte ...">
+		          </textarea>
+			</div>
+		</form>
+
+	</script>
+
+	<script type="text/ng-template" id="document-messages">
+		<div ng-message="required">Ce champs est obligatoire</div>
+	</script>
+
+</section>

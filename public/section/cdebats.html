@@ -1,0 +1,16 @@
+<section class="childrenSelectable">
+
+	<div class="cat-item left" style="height:auto;margin:0 15px 0 0"><img ng-src="{{D.cat.img}}"></div>
+
+	<div class="inline" style="width: calc(100% - 220px);">
+		<br ng-if="selector"/>
+		<a ui-sref="cat"  class="grey blackover">> Catégories</a> > {{D.cat.name }}
+		<br/>
+
+		<hr/>
+
+		<div class="content">
+			<div ui-view class=""></div>
+		</div>
+	</div>
+</section>

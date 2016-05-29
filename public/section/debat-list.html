@@ -1,0 +1,40 @@
+
+<section class="wider-container" >
+
+	<h4 style="display:inline-block"> Débats </h4>&nbsp;
+	<div class="grey" style="display:inline"> [ {{ D.debats.length }} ] </div>
+
+	<table class="tablecompact" ng-init="query=''">
+		<tr class="grey hover-pointer blackover">
+			<td></td>
+			<td ng-click="reverse=order=='count.n'?!reverse:true;order='count.n'">Posts {{order=='count.n'?reverse?'▼':'▲':' '}}</td>
+			<td ng-click="reverse=order=='dateOuverture'?!reverse:true;order='dateOuverture'">Ouvert le {{order=='dateOuverture'?reverse?'▼':'▲':' '}}</td>
+			<td ng-click="reverse=order=='dateFermeture'?!reverse:true;order='dateFermeture'">Clos le {{order=='dateFermeture'?reverse?'▼':'▲':' '}}</td>
+			<td ng-click="reverse=order=='titre'?!reverse:false;order='titre'">Document débattu {{order=='titre'?!reverse?'▼':'▲':' '}}</td>
+			<td ng-click="reverse=order=='gids[0].name'?!reverse:true;order='gids[0].name'">Groupes {{order=='gids[0].name'?reverse?'▼':'▲':' '}}</td>
+		</tr>
+		<tr ng-repeat="d in D.debats| orderBy:order:reverse">
+			<td>
+				<a href="#/restitution/{{d._id}}">
+					<div class="temperature">
+						<div class="barcount" ng-if="d.count.n">
+							<div class="sub-bar greensquare"
+							     style="width:{{ (100*d.count[0]/d.count.n) | number:0}}%"></div>
+							<div class="sub-bar redsquare"
+							     style="width:{{ (100*d.count[1]/d.count.n) | number:0}}%"></div>
+							<div class="sub-bar bluesquare"
+							     style="width:{{( 100*d.count[2]/d.count.n) | number:0}}%"></div>
+							<div class="sub-bar hyposquare"
+							     style="width:{{( 100*d.count[3]/d.count.n) | number:0}}%"></div>
+						</div>
+					</div>
+				</a>
+			</td>
+			<td>[{{d.count.n}}]</td>
+			<td>{{d.dateOuverture| date:'dd/MM/yy'}}</td>
+			<td class="hover-pointer">{{d.dateFermeture ? (d.dateFermeture | date:'dd/MM/yy') : 'en cours'}}</td>
+			<td><a href="#/debat/{{d._id}}">{{( d.rootCmt.citation +", "+d.rootCmt.reformulation )| cut:true:55 }}</a></td>
+			<td><span ng-repeat="g in d.gids">{{g.name}}{{$last ? '' : ', '}}</span></td>
+		</tr>
+	</table>
+</section>

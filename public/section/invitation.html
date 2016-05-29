@@ -1,0 +1,42 @@
+<div class="dialoguea-modal-login">
+    <div ng-if="!sent" class="dialoguea-modal-content">
+        <div class="dialoguea-modal-header">Envoyer une invitation au débat</div>
+        <div class="alert alert-warning" ng-if="A.inviteMessage">{{A.inviteMessage}}</div>
+        <form name="invitationForm" id="invitationForm" ng-submit="A.submitInvitation()" novalidate>
+            <div class="dialoguea-modal-body">
+                <div class="form-group">
+                    <label for="email">Email de la personne à inviter</label>
+                    <input class="form-control" ng-model="A.inviteEmail" type="text" name="email" id="email" required
+                           email-validator>
+
+                    <div class="error-messages" ng-if="interacted(invitationForm.email)"
+                         ng-messages="invitationForm.email.$error">
+	                    <div ng-messages-include="invitation-messages"></div>
+                        <div ng-message="required">Veuillez saisir un email</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="dialoguea-modal-footer">
+                <input type="submit" class="button btn" ng-disabled="submitted || invitationForm.email.$invalid"
+                       value="Envoyer l'invitation">
+                <input type="button" class="button btn" value="Annuler" ng-click="cancel()">
+            </div>
+        </form>
+    </div>
+    <div ng-if="sent" class="dialoguea-modal-content">
+        <div class="dialoguea-modal-header"></div>
+        <div class="alert alert-warning">{{sentConfirmMessage}}
+        </div>
+
+        <div class="dialoguea-modal-footer">
+            <input type="button" class="button btn" value="Retourner au débat" ng-click="cancel()">
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="invitation-messages">
+    <div ng-message="required">Ce champ est obligatoire</div>
+    <div ng-message="email">Cette addresse email n'est pas valide</div>
+    <div ng-message="email-valid">Cette addresse email n'est pas valide</div>
+</script>

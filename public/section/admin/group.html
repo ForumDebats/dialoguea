@@ -1,0 +1,31 @@
+<section class="admin-view view-container childrenSelectable ">
+
+	<div>
+		<a ui-sref="{{g.statePrefix+'groupList' }}" class="grey">> Liste des groupes</a><br/>
+
+		<h3>{{ g.group.name }}</h3>
+
+		<div class="grey" style="display: inline; float:right">
+			{{g.group.openDebates}} débat{{g.group.openDebates>1 ?'s ouverts':' ouvert' }}
+			{{g.group.closedDebates}} débat{{g.group.closedDebates>1 ?'s':'' }} terminé{{g.group.closeDebates>1 ?'s':'' }}
+		</div>
+		<hr/>
+
+		<user-list></user-list>
+
+		<button class='button btn'
+		        ng-init="showConfirm=false"
+		        ng-show='showConfirm==false'
+		        ng-click="showConfirm=true">
+			supprimer ce groupe
+		</button>
+		<div class="yesno" ng:show="showConfirm==true">
+			<p>Êtes vous sûr de vouloir supprimer ce groupe ? <br/>
+				Tous les utilisateurs du groupe <i>{{g.group.name}}</i> seront supprimés.
+				<button class="button btn yes" ng-click='g.delete();showConfirm=false'>Oui</button>
+				<button class="button btn no" ng-click="showConfirm=false">Non</button>
+			</p>
+		</div>
+	</div>
+
+</section>

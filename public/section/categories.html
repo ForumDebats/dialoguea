@@ -1,0 +1,21 @@
+<section class="admin-view childrenSelectable">
+
+	<div class="page-header">
+		<h3 class="d-ib"></h3>
+	</div>
+
+	<ul class="cat-list center">
+		<li ng-repeat="c in C.cat">
+			<a ui-sref="cdebats({catId:c._id})">
+			<div class="cat-item">
+					<img ng-src="{{c.img}}"/>
+					<span class="display view">{{c.name}}</span>
+			</div>
+			</a>
+			<span class="grey">{{c.count}} débats</span>
+		</li>
+	</ul>
+</section>
+
+
+

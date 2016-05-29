@@ -1,0 +1,42 @@
+<section class="admin-view childrenSelectable opendebat">
+
+	<div class="Hblock"><h3 class="Hblock">Ouvrir un débat</h3></div>
+
+	<div class="composedebat">
+			<div id="participants" class="box" ng-click="O.select('groups')">
+				<a ui-sref="opendebat.groupList">
+					<img src="{{O.isSection('groups')?'/img/groupes-sel.png':'/img/groupes.png'}}" class="centerdiv">
+						<div class="items-selected">
+						<div ng-if="!hasSelection" class="center blackover" ng-class="{grey : !O.isSection('groups')}" >
+							Choisir un groupe de participants
+						</div>
+						<div class="center" ng-if="hasSelection">
+							<div class="blackover" ng-class="{grey : O.section=='docs'}">Groupe{{selectedGroups.length>1?'s':''}}</div>
+							<div ng-repeat="g in selectedGroups"><b>{{g}}</b></div>
+						</div>
+					</div>
+				</a>
+			</div>
+
+			<div id="documents" class="box" ng-click="O.select('docs')">
+				<a ui-sref="opendebat.categories">
+					<img src="{{O.isSection('docs')?'/img/docs-sel.png':'/img/docs.png'}}" class="centerdiv">
+					<div class="items-selected">
+						<div ng-if="!selectedDoc"
+						     class="center blackover"
+						     ng-class="{grey : !O.isSection('docs')}">Choisir un document à débattre</div>
+						<div class="center" ng-if="selectedDoc">
+							<div class="center blackover" ng-class="{grey : !O.isSection('docs')}">Document</div>
+							<div>{{selectedDoc.titre1}} - <b>{{selectedDoc.titre2}}</b></div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	<button
+			ng-click="O.openDebat()"
+			ng-show="hasSelection && selectedDoc" class="box button btn bigbutton yesover inline">Lancer le débat</button>
+
+	<div ui-view class="animate"></div>
+</section>
+

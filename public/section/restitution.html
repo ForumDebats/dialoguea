@@ -1,0 +1,63 @@
+
+
+
+<section>
+	<img class="loading" src="/img/loading-sun.gif">
+	<div class="view-title"> {{G.root.citation}}, <b><i>{{G.root.reformulation}}</i></b></div>
+	<br/>
+
+	<div ng-if="G.syntheseLink">
+		<a href="{{G.syntheseLink}}">Voir la synthèse</a>
+	</div>
+	<div id="graph1" class="graph"></div>
+	<div class="d-ib" style="width:400px;height:600px">
+		<div class="chart">
+			<label style="display:inline;position:absolute;margin:0 auto">Nombre de messages</label>
+			<svg class="pie-a"></svg>
+			<label style="display:inline;position:absolute;margin:0 auto">Longueur des messages</label>
+			<svg class="pie-b"></svg>
+		</div>
+	</div>
+
+	<table style="float:left">
+		<tr class="grey hover-pointer blackover">
+			<td ng-click="reverse=order=='date'?!reverse:true;order='date'">Date {{order=='date'?reverse?"▲":"▼":''}}</td>
+			<td ng-click="reverse=order=='avis'?!reverse:false;order='avis'" >&nbsp;{{order=='avis'?reverse?"▲":"▼":'⚫'}}</td>
+			<td ng-click="reverse=order=='prenom'?!reverse:true;order='prenom'">Auteur {{order=='prenom'?reverse?"▲":"▼":''}}</td>
+			<td class="black hover-nopointer " >Message</td>
+		</tr>
+		<tr ng-repeat="c in G.cmts | orderBy:order:reverse">
+
+			<td style="width:170px; vertical-align:top">
+				<a href="/#{{G.debat._id}}/{{c._id}}" target="_blank">
+					{{c.date| date:'EEE d MMM, HH:mm'}}</a>
+			</td>
+
+			<td style="vertical-align:top">
+				&nbsp;
+				<div class="margin-note inline"
+				     ng-class="{'green': c.avis==0, 'red': c.avis==1, 'blue': c.avis==2, 'margin-hypos':c.avis==3}">
+				</div>
+				&nbsp;
+			</td>
+
+			<td style="vertical-align:top;width:110px"> {{c.prenom}}</td>
+
+			<td class="cmtlink" style="width:600px">
+				<a class="cmtlink" href="/#/debat/{{G.debat._id}}/{{c._id}}" target="_blank">
+					<b>{{c.argumentation|cut:true:70}}</b>
+				</a>
+
+				<div class="cmtfull">
+					<div class="argumentation-card-citation">{{c.citation}}</div>
+					<div class="argumentation-card-reformulation">{{c.reformulation}}</div>
+					<div class="argumentation-card-argumentation">{{c.argumentation}}</div>
+				</div>
+
+			</td>
+		</tr>
+	</table>
+
+	<div style="height:100px"></div>
+
+</section>

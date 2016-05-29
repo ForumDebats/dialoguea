@@ -1,0 +1,29 @@
+<section>
+    <div>
+        <form id="editDoc" ng:submit="N.preview()" class="doc-edit" ng-if="N.status==0">
+            <h3>Nouveau texte à débattre</h3>
+            <input type="text" placeholder="Auteur du débat" id="auteur"
+                   ng-model="N.auteur" maxlength="100" required>
+            <input type="text" placeholder="Titre ou objet du débat" id="titre"
+                   ng-model="N.titre" maxlength="100" required>
+            {{N.errmsg}}
+            <textarea ui-tinymce="N.tinymceAdminOption"
+                      ng-model="N.texte"
+                      id="tiny-new-admin"
+                      class="d-b selectable"
+                      placeholder="Entrez le texte ...">
+            </textarea><br/>
+            <button class="button btn" type="submit">Enregistrer</button>
+        </form>
+    </div>
+    <div class="preview" ng-show="N.status==1">
+        <H3>{{N.doc.auteur}}, <b><i>{{N.doc.titre}}</i></b></H3>
+        <article class="doc-view selectable"
+                 ng-bind-html="N.doc.texte"></article>
+        <hr/>
+        <div class="nouveau-debat">
+            <button class="btn" ng-click="N.status=0">Retour à l'édition</button>
+            <button class="button btn" type="submit" ng-click="N.validate()">Ouvrir le débat</button>
+        </div>
+    </div>
+</section>

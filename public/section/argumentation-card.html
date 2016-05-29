@@ -1,0 +1,51 @@
+<div class="treenode">
+	<div class="argumentation-card {{item.temp? 'temp':''}}"
+		ng-class="{'daccord': item.avis == 0, 'pasdaccord': item.avis == 1, 'pasdavis': item.avis == 2, 'hypostase': item.avis == 3 }">
+		<h5 class="argumentation-card-header cf">
+			<span class="argumentation-card-auteur">{{item.prenom}}</span>
+			<span class="argumentation-card-date">{{item.date| date:'EEEE d MMMM à HH:mm'}}</span>
+			<span class="right" ng-if='item.temp' ng-click="A.editComment(item)"> <a href="#">éditer</a>&nbsp;</span>
+			<ng-pluralize class="argumentation-card-nbcomment"
+			              ng-show="item.children.length"
+			              count="item.children.length"
+			              when="{'one': '1 commentaire', 'other': '{} commentaires'}">
+			</ng-pluralize>
+		</h5>
+
+		<h6 class="argumentation-card-citation"
+		    ng-click="A.scrollDebateTo(item.parentId)"
+		    ng-mouseover="A.onOverCmt(item,true)"
+		    ng-mouseout="A.onLeaveCmt(item)"
+		    title="cliquer pour aller à la sélection">{{item.citation | cut:true:90}}</h6>
+
+		<div class="argumentation-card-reformulation" ng-bind-html="item.reformulation | links"></div>
+		<table>
+			<tr>
+				<td style="width:95%">
+					<div id="{{item._id}}"
+					     class="argumentation-card-argumentation"
+					     ng-class="{selectable: !item.temp}"
+					     ng-mouseup="A.selectItem($event,item)" ng-bind-html="item.argumentation | links">
+					</div>
+				</td>
+				<td class="tdmargin">
+					<div ng-repeat="note in item.notes"
+					     class="margin-note"
+					     ng-class="{'green': note.avis === 0, 'red': note.avis === 1, 'blue': note.avis === 2, 'margin-hypos':note.avis == 3}"
+					     ng-mouseover="A.onOverNote(note,item)"
+					     ng-mouseout="A.onLeaveNote(note,item)"
+					     ng-click="A.onOverNote(note,item);A.scrollToComment(note.id)"
+					     style="top:{{note.pos.top}}px;left:{{note.pos.left}}px">
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<ol class="tree-nodes"
+    ng-model="item">
+	<li class="tree-node" scroll-item=""
+	    ng-repeat="item in item.children | orderBy:date:false"
+	    ng-include="'section/argumentation-card.html'"></li>
+</ol>

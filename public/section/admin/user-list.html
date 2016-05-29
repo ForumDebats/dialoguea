@@ -1,0 +1,160 @@
+
+<div id="importResult" class="dialoguea-modal" ng-show="U.newListPopup">
+	<div class="dialoguea-modal-1000p">
+		<div class="dialoguea-modal-content">
+			<div class="dialoguea-modal-header">Confirmer l'importation de la liste
+				<button class="button btn yes" ng-click="U.importList();U.importing=true" ng-disabled="U.importing==true">
+					Valider
+				</button>
+				<button class="button btn no" ng-click="cancelList()">Annuler</button>
+			</div>
+			<div class="dialoguea-modal-body">
+				<table class="usertable">
+					<tr>
+						<td>Nom</td>
+						<td>Prénom</td>
+						<td>login</td>
+						<td>password</td>
+						<!--<td>groupe</td>-->
+						<td>email</td>
+					</tr>
+
+					<tr ng-repeat="user in U.newUserList | orderBy:'nom'">
+						<td>{{user[0]}}</td>
+						<td>{{user[1]}}</td>
+						<td>{{user[2]}}</td>
+						<td>*****</td>
+						<!--<td>{{user[4]}}</td>-->
+						<td>{{user[4]}}</td>
+					</tr>
+				</table>
+				<br/>
+			</div>
+		</div>
+	</div>
+</div>
+
+<section>
+	<button id="importList" class='button btn'
+	        ng-click="addlistshow=2"
+	        ng-show="addlistshow===1"
+	        ng-init="addlistshow=1">
+		Importer une liste
+	</button>
+
+	<div ng-controller="FileUploadCtrl">
+		<form id="addList" class="add-list" ng-submit="upload('/uploadXls')" ng-show="addlistshow===2">
+
+			<input id="selectedFile" type="text" value="Choisir un fichier Excel..."
+			       class="grey bigfield"
+			       onclick="javascript:document.getElementById('file').click();">
+
+			<input id="file" type="file" style='display: none;' name="file"
+			       accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet "
+			       onchange="
+               angular.element(this).scope().setFiles(this,'selectedFile')"/>
+
+			<button class="button btn" type="button"
+			        ng-disabled="processing==true"
+			        ng-click="processing=true;uploadFile('/uploadXls')"
+			        ng-show="fileSelected"> Importer la liste
+			</button>
+			<div class="redtext"> {{ U.listErrMsg }}</div>
+			<!-- <div ng-show="progressVisible">
+						<div class="percent">{{progress}}%</div>
+						<div class="progress-bar">
+								<div class="uploaded" ng-style="{'width': progress+'%'}"></div>
+						</div>
+				</div>-->
+			<div class="redtext"> {{U.uploadErrmsg}}</div>
+		</form>
+	</div>
+
+	{{U.userlist}}
+
+	<button id="addPerson" class='button btn'
+	        ng-click="addpersonshow=2"
+	        ng-show="addpersonshow===1"
+	        ng-init="addpersonshow=1"
+		>
+		Ajouter une personne
+	</button>
+
+
+	<form class="adduser" ng-submit="U.addUser()" ng-show="addpersonshow===2">
+		<b>Nouvel Utilisateur</b><br/>
+
+		<div style="height:10px"></div>
+		<input class="bigfield" ng-model="U.newUser.prenom" ng-change="U.setLogin()" type="text" placeholder="Prénom">
+		<input class="bigfield" ng-model="U.newUser.nom" ng-change="U.setLogin()" type="text" placeholder="Nom">
+		<input class="bigfield" ng-model="U.newUser.login" type="text" placeholder="Login">
+		<input class="bigfield" ng-model="U.newUser.email" type="text" placeholder="Email">
+		<button id="newUserBtn" class="button btn" type="submit">Ajouter cette personne</button>
+		<div class="redtext"> {{U.errmsg}}</div>
+	</form>
+
+</section>
+
+
+<section id="userlist">
+
+	<h4 style="display:inline-block">Membres du groupe</h4>&nbsp;
+	<div class="grey" style="display:inline">
+		[
+		<ng-pluralize class="grey"
+		              count="U.users.length"
+		              when="{'0': '','1': '{} personne', 'other': '{} personnes'}"
+		              style="display:inline">
+		</ng-pluralize>
+		]
+	</div>
+	<img class="loading" src="img/loading-sun.gif">
+	&nbsp;&nbsp;Rechercher <input type="text" style="width:170px;" ng-model="query">
+	<ul class="usertable" ng-init="query=''">
+		<li class="grey">
+			<label>Prénom</label>
+			<label>Nom</label>
+			<label>Identifiant</label>
+			<label>Mot de passe</label>
+			<label>Email</label>
+		</li>
+		<li ng-repeat="user in U.users | orderBy:'nom' | filter:search"
+		    ng-class="{editing: user == U.editedUser}">
+			<div class="view">
+				<input ng-click="U.editUser(user,'prenom')"   class="display" ng-model="user.prenom"    type="text"/>
+				<input ng-click="U.editUser(user,'nom')"      class="display" ng-model="user.nom"       type="text"/>
+				<input ng-click="U.editUser(user,'login')"    class="display" ng-model="user.login"     type="text"/>
+				<input ng-click="U.editUser(user,'password')" class="display" ng-model="user.password"  type="password"/>
+				<input ng-click="U.editUser(user,'email')" class="display" ng-model="user.email"     type="text"/>
+				<div class="destroy" ng-click="U.removeUser(user)"></div>
+				<!-- <button class="btn destroy" ng-click="U.removeUser(user)"></button>-->
+			</div>
+
+			<form name="users">
+				<input type="text" class="edit" name="prenom" ng-model="user.prenom" id="prenom{{user._id}}"
+				       ng-escape="U.revertEditing(user, users)"
+				       ng-enter="U.doneEditing(user, users.prenom, users)"
+				       ng-blur="U.doneEditing(user, users.prenom, users)"/>
+				<input type="text" class="edit" name="nom" ng-model="user.nom" id="nom{{user._id}}"
+				       ng-escape="U.revertEditing(user, users)"
+				       ng-enter="U.doneEditing(user, users.nom, users)"
+				       ng-blur="U.doneEditing(user, users.nom, users)"/>
+				<input type="text" class="edit" name="login" ng-model="user.login" id="login{{user._id}}"
+				       ng-escape="U.revertEditing(user, users)"
+				       ng-enter="U.doneEditing(user, users.login, users)"
+				       ng-blur="U.doneEditing(user, users.login, users)"/>
+				<input type="text" class="edit" name="password" ng-model="user.password" id="password{{user._id}}"
+				       ng-escape="U.revertEditing(user, users)"
+				       ng-enter="U.doneEditing(user, users.password, users)"
+				       ng-blur="U.doneEditing(user, users.password, users)"/>
+				<input type="text" class="edit" name="email" ng-model="user.email" id="email{{user._id}}"
+				       ng-escape="U.revertEditing(user, users)"
+				       ng-enter="U.doneEditing(user, users.email, users)"
+				       ng-blur="U.doneEditing(user, users.email, users)"/>
+			</form>
+
+		</li>
+	</ul>
+	<div class="redtext"> {{U.errOnUpdate}}</div>
+
+</section>
