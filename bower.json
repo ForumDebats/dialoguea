@@ -1,8 +1,8 @@
 {
-  "name": "dialoguea-clientside",
-  "version": "0.0.3",
+  "name": "dialoguea-frontend",
+  "version": "0.1.9",
   "authors": [
-    "Phil Estival <infos@caern.net>"
+    "Phil Estival <phil.estival@free.fr>"
   ],
   "license": "GPL",
   "dependencies": {
