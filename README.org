@@ -3,7 +3,7 @@
 Commentaires de textes et débats collaboratifs
 
 
-#+BEGIN_src nil
+#+BEGIN_COMMENT
 ** installation
 Clone the repository : =git clone https://github.com/ForumDebats/dialoguea.git=
 
@@ -24,5 +24,6 @@ install nodemon :  =npm install -g nodemon=
 =nodemon server=
 
 or =run.sh= if you prefer to run the  =forever= loop (see =.foreverignore=)
-#+end_src
+#+end_comment
+
 
