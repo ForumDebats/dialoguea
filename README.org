@@ -2,10 +2,15 @@
 * DIALOGUEA
 Commentaires de textes et débats collaboratifs
 
+
+#+BEGIN_src nil
 ** installation
 Clone the repository : =git clone https://github.com/ForumDebats/dialoguea.git=
 
-*** dependency
+*** dependencies
+
+a mongo database
+
 libvips : =./install-libvips.sh=, required par [[https://github.com/lovell/sharp.git][sharp]].
 
 
@@ -19,5 +24,5 @@ install nodemon :  =npm install -g nodemon=
 =nodemon server=
 
 or =run.sh= if you prefer to run the  =forever= loop (see =.foreverignore=)
-
+#+end_src
 
