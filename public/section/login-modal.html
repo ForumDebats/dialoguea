@@ -1,6 +1,6 @@
 <div class="dialoguea-modal-login">
 	<div class="dialoguea-modal-content">
-		<a class="closecross" ng-click="L.closeLoginWindow()"></a>
+		<!--<a class="closecross" ng-click="L.closeLoginWindow()"></a>-->
 
 		<div class="dialoguea-modal-header" translate="CONNECT_TO_DIALOGUEA">Se connecter à DIALOGUEA</div>
 		<form name="loginForm" ng-submit="L.submit()">
@@ -21,19 +21,21 @@
 				<input type="submit" class="button btn"
 				       value="{{'LOGIN'|translate}}" ng-disabled="!L.login.username || !L.login.password">
 			</div>
+			<div ng-if="L.createAccountAllowed">
+				<div class="dialoguea-modal-body left">
+					<a href="/#/register"
+					   ng-click="L.show(false)"
+					   translate="CREATE_ACCOUNT">Créer un compte</a>
+				</div>
+				<br/>
 
-			<div ng-if="L.createAccountAllowed" class="dialoguea-modal-body left">
-				<a href="/#/register"
-				   ng-click="L.show(false)"
-				   translate="CREATE_ACCOUNT">Créer un compte</a>
+				<div class="dialoguea-modal-body left">
+					<a href="/#/requestp"
+					   translate="FORGOT_YOUR_PASSWORD"
+					   ng-click="L.show(false)">Mot de passe oublié ?</a>
+				</div>
 			</div>
 			<br/>
-
-			<div class="dialoguea-modal-body left">
-				<a href="/#/requestp"
-				   translate="FORGOT_YOUR_PASSWORD"
-				   ng-click="L.show(false)">Mot de passe oublié ?</a>
-			</div>
 			<div class="dialoguea-modal-footer"></div>
 
 		</form>
