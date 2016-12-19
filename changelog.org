@@ -1,0 +1,8 @@
+
+ ┌───────────────────────────────┐
+ │ Changelog notes for Dialoguea │
+ └───────────────────────────────┘
+
+Last update : <2016-12-19 09:47:53>
+
+* v0.1.9 [2016-12-19 lun.] Initialisation du dépôt git
