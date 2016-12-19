@@ -4,7 +4,7 @@
   "authors": [
     "Philippe Estival <phil.estival@free.fr>"
   ],
-  "license": "GPL",
+  "license": "MIT/GPLv3",
   "dependencies": {
     "angular": "1.4.5",
     "angular-resource": "1.4.5",
