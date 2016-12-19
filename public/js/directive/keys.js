@@ -1,4 +1,13 @@
-
+/**
+ * Dialoguea
+ * keys.js
+ *
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ * keyboard binding
+ */
 
 function ngEnter () {
 	return function (scope, element, attrs) {

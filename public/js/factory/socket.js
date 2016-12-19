@@ -1,3 +1,15 @@
+/**
+ * Dialoguea
+ * socket.js
+ *
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ *
+ * websocket emiter/receiver
+ *
+ **/
 
 var SocketFactory = ['$rootScope',function($rootScope) {
     //var socket = io.connect();

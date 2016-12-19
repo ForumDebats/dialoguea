@@ -1,4 +1,11 @@
 /**
+ * Dialoguea
+ * login.js
+ *
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+
  * Login process
  *
  * - trigger the logincontroler
@@ -55,7 +62,7 @@ angular.module('login', ['oc.lazyLoad'])
 		function ($rootScope, $http, $window, $sce, $translate, $ocLazyLoad, $scope, $timeout, $location) {
 
 			$rootScope.credits = true;
-			$rootScope.showLoginWindow = !Settings.mode_public;// set it to true by default to force login on opening
+			$rootScope.showLoginWindow = !Settings.default_login_policy;// set it to true by default to force login on opening
 			var L = this
 			L.createAccountAllowed = Settings.createAccountAllowed
 
@@ -74,14 +81,16 @@ angular.module('login', ['oc.lazyLoad'])
 						if (data == "HI") {
 							$rootScope.loggedIn = true;
 							$rootScope.showLoginWindow = false;
-							L.load(user.indicator)
+							if(user.indicator) L.load(user.indicator)
+
 						}
 						else $rootScope.loggedIn = false;
 					})
 					.error(function () {
 						delete storage.user;
 						$rootScope.loggedIn = false;
-						//$rootScope.showLoginWindow = true;
+						// ! mode public
+						$rootScope.showLoginWindow = true;
 						$rootScope.user = null;
 					})
 					.finally(function () {
@@ -122,13 +131,13 @@ angular.module('login', ['oc.lazyLoad'])
 
 			$rootScope.disco = function () {
 				delete storage.user;
-				$rootScope.showLoginWindow = !Settings.mode_public ; // TRUE if default is login policy // Settings.defaultLogin
 				$rootScope.loggedIn = false;
 				$rootScope.user = {};
 				$rootScope.credits = true;
 				L.panel = ''
 				L.message = '';
 				$location.path("/");
+				$rootScope.showLoginWindow = Settings.default_login_policy ; // TRUE if default is login policy // Settings.defaultLogin
 			};
 
 			L.closeLoginWindow = function () {

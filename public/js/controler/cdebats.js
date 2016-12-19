@@ -1,11 +1,14 @@
 /**
- * Date: <2014-12-01 16:29:44>
- * DialogueA
- * estival@enov-formation.com
- *
+ * Dialoguea
  * cdebats.js
  *
- **/
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ * débats oar categories
+ */
+
 
 var CatDocListCtrl = ['Cat', '$scope', '$location', '$rootScope', '$stateParams', '$state', '$http',
 		function (Cat, $scope, $location, $rootScope, $stateParams, $state, $http) {

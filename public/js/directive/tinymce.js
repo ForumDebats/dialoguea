@@ -1,6 +1,14 @@
 /**
+ * Dialoguea
+ * tinymce.js
+ *
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
  * Binds a TinyMCE widget to <textarea> elements.
  */
+
 angular.module('ui.tinymce', [])
   .value('uiTinymceConfig', {})
   .directive('uiTinymce', ['uiTinymceConfig', function (uiTinymceConfig) {

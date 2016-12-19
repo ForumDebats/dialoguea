@@ -1,9 +1,13 @@
 /**
- * Date: 07/12/14
- * DialogueA
- * philippe.estival@enov-formation.com
+ * Dialoguea
+ * listedebats.js
  *
- **/
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ * listes de débats par categories
+ */
 
 var ListeDebatsCtrl =
 	['Cat','$http','$scope','$timeout','$filter', '$state',

@@ -1,7 +1,11 @@
 /**
- * Date: <2014-12-01 16:29:44>
- * DialogueA
- * philippe.estival@enov-formation.com
+ * Dialoguea
+ * restfactory.js
+ *
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
  *
  * DB rest ressources factories.js
  * AngularJS Factories

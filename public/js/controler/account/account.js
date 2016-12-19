@@ -1,25 +1,26 @@
 w/**
- * Date: <17/05/15 16:52>
- * dialoguea
- * estival@enov-formation.com
+ * Dialoguea
+ * account.js
  *
- * activation.js
+ * copyright 2015-2016 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ * registering usera and password recovery
  */
 
 
 angular.module('account', ['ngResource','ngMessages'])
-
 	.directive('checkStrength', checkstrength)
 	.controller('RegisterCtrl', ['$scope','$http',function($scope,$http) {
 		$scope.user = { nom:'', prenom:'', email:'',password:''};
 		$scope.submitted = false;
 		$scope.validated = false;
-		$scope.message=''
+		$scope.message = ''
 		$scope.interacted = function(field) { return $scope.submitted && field.$dirty; };
 
 		$scope.submit = function() {
-			$scope.submitted=true;
-			console_dbg($scope.user)
+			$scope.submitted = true;
 			if($scope.registerForm.$valid) {
 				$http
 					.post('newaccount', $scope.user)
@@ -33,6 +34,8 @@ angular.module('account', ['ngResource','ngMessages'])
 		}
 	}])
 
+
+/** account activation */
 const ActivationCtrl
 	= ['$scope', '$rootScope', '$sce', '$http', '$stateParams', '$window', "$location",
 	function ($scope, $rootScope, $sce, $http, $stateParams, $window, $location) {
@@ -40,17 +43,18 @@ const ActivationCtrl
 		$scope.message = "Validation..."
 
 		$http
-			.post('/activer', {id: $stateParams.id}) // todo : hash
+			.post('activer', {id: $stateParams.id}) // todo : hash
 			.success(function (data) {
 				UserStorage(data, $window, $rootScope, $sce)
-				$location.path("/_/registered");
+				$location.path("_/registered");
 			})
-			.error(function (data) {
-				$location.path("/_/" + data);
+			.error(function (data) { // return code redirect to error page
+				$location.path("_/" + data);
 			})
 	}]
 
 
+/** password retrieval request */
 const RequestPassCtrl
 	= ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
@@ -66,37 +70,34 @@ const RequestPassCtrl
 	$scope.submitRequest = function () {
 		$scope.submitted = true;
 		$scope.changed = false;
-		// todo : wait
+		// todo : wait indicator
 		//if($scope.loginForm.$valid) {
 		$http
 			.post('/requestnewp', $scope.user)
 			.success(function () {
-				//$scope.message="Les instructions pour réinitialiser le mot de passe vous ont été envoyées.";
+				// Les instructions pour réinitialiser le mot de passe ont été envoyées
 				$location.path('/_/activating')
 			})
 			.error(function (data) {
-				// todo : message code, translate
-				//if(data==-1) $scope.message="Aucun compte Dialoguea n'est enregistré avec cet email"
 				if (data == -1) $location.path('/_/noaccount')
 			})
 		//}
 	}
 }];
 
+/** set a new password */
 const UpdatePassCtrl
 	= ['$scope', '$rootScope', '$sce', '$http', '$stateParams', '$state', '$window',
 	function ($scope, $rootScope, $sce, $http, $stateParams, $state, $window ) {
 
 		$scope.success = false;
 		$scope.user = {password: ''}
-		console_dbg($stateParams.key)
 		$http
 			.post('/reinitmdpcheck', {key: $stateParams.key})
 			.success(function (data) {
 				$scope.message = data;
 			})
 			.error(function (data) {
-				console_dbg(data)
 				$state.go("error", {message: "invalid_token"});
 			})
 

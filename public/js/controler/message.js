@@ -1,8 +1,18 @@
 /**
- * Created by Phil on 23/01/15.
+ * Dialoguea
+ * message.js
+ *
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ * stored client side
+ *
+   TODO :
+   - traduction / bundle
+   - server side
  */
 
-// todo : traduction / bundle
 
 var MessageCtrl = ['$scope','$stateParams',function ($scope,$stateParams) {
     $scope.fade=false;
