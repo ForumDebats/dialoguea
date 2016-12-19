@@ -1,4 +1,4 @@
-w/**
+/**
  * Dialoguea
  * account.js
  *
