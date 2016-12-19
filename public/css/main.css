@@ -1,6 +1,9 @@
-/*
- * Dialoguea.css
- * copyright Intactile design & Philippe Estival 2015-2016
+/* Dialoguea.css
+ *
+ * copyright 2015-2016 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
  */
 
 html {
@@ -654,7 +657,8 @@ buggy with a firefox zoom
 }
 
 .dialoguea-modal-header {
-	padding: 20px 20px 10px 20px;
+	padding: 15px 20px 10px 20px;
+    margin-bottom: 5px;
 	color: #6C5241;
 	font-size: 22px;
 }

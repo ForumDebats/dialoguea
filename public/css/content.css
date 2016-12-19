@@ -1,0 +1,44 @@
+@font-face {
+    font-family: 'Fira Sans';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Fira Sans Light'),
+
+    url(fonts/FiraSans/FiraSans-Light.woff) format('woff');
+    url(fonts/FiraSans/FiraSans-Light2.ttf) format('truetype');/*ok*/
+}
+@font-face {
+    font-family: 'Fira Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Fira Sans Regular'),
+    url(fonts/FiraSans/FiraSans-Regular.woff) format('woff'),
+    url(fonts/FiraSans/FiraSans-Regular.ttf) format('truetype'); /*problem*/
+}
+@font-face {
+    font-family: 'Fira Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Fira Sans Bold'),
+    local('FiraSans-Bold'),
+    url(fonts/FiraSans/FiraSans-Bold.woff) format('woff'),
+    url(fonts/FiraSans/FiraSans-Bold.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'Fira San';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Fira Sans Italic'),
+    local('FiraSans-Italic'),
+    url(fonts/FiraSans/FiraSans-Italic.woff) format('woff'),
+    url(fonts/FiraSans/FiraSans-Italic.ttf) format('truetype');
+}
+
+
+body, pre, td {
+    color: #000;
+    font-family: 'Fira Sans', sans-serif;
+    margin: 8px;
+    word-wrap: break-word;
+}
+.tinymce-content { white-space: normal; }

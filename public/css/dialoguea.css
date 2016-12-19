@@ -1,0 +1,162 @@
+@import 'reset.min.css';
+@import 'bootstrap-combined.min.css';
+@import 'gd.min.css';
+@import 'fonts/FiraSans.css';
+@import 'main.min.css';
+@import 'annotator.touch.min.css';
+table.liste-debats thead {
+  font-style: italic;
+  font-size: 12px;
+}
+table.liste-debats tr td {
+  padding: 0 4px;
+  vertical-align: top;
+  min-width: 45px;
+}
+/* cant set it in table ahead . used by tbody in liste-debats*/
+.space-bottom {
+  border-bottom: 16px solid transparent;
+}
+/*replace par thead please*/
+.tablecompact tr:first-child {
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+  padding: 4px 36px 0 0;
+}
+.tablecompact td {
+  border-top: none;
+  padding: 0px 8px 0 0;
+}
+.tablecompact tr:hover td {
+  background-color: #EDEDED;
+}
+.tablecompact tr:hover td div.destroy {
+  display: inline-block;
+}
+.tablecompact tr.delete {
+  background-color: #ffa923;
+}
+.destroy {
+  font-size: 16px;
+  position: relative;
+  /*left:-15px;*/
+  float: right;
+  /*visibility:hidden;*/
+  display: none ;
+  cursor: default;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+.destroy:after {
+  content: '✖';
+}
+.destroy:hover {
+  color: darkred;
+  /*text-shadow: 0 0 1px #000,
+  0 0 10px rgba(107, 107, 107, 0.8);*/
+  /*-webkit-transform: scale(1.3);
+  transform: scale(1.3);*/
+}
+/*
+
+table, th, td {
+  border: 1px solid black;
+}
+*/
+td.selector {
+  height: 30px;
+}
+.items-selected {
+  position: absolute;
+  width: 200px;
+}
+.doc-list {
+  width: 600px;
+}
+.doc-list .doc-item-validator {
+  padding-left: 50px;
+  margin-left: 0;
+}
+.doc-list tr > td {
+  cursor: pointer;
+}
+.doc-list tr > td .doc-item {
+  margin-left: 40px;
+}
+.doc-list tr > td:hover {
+  background: #EFEFEF;
+  padding-left: 0;
+}
+.doc-list tr > td:hover .destroy {
+  display: block;
+}
+.doc-list tr > td:hover .hover-show {
+  display: block;
+}
+tr.group-item > td {
+  margin-bottom: 0.75em;
+  cursor: pointer;
+}
+.item-validator {
+  padding-left: 50px;
+  margin-left: 0;
+}
+tr.group-item:hover {
+  background: #EFEFEF ;
+  padding-left: 0;
+}
+.group-item {
+  /* oiverride bootstrap 100%*/
+  margin-left: 40px;
+}
+.group-item img {
+  max-width: inherit;
+}
+.group-item .select {
+  width: 30px;
+}
+.group-item td:hover {
+  background: #EFEFEF;
+  padding-left: 0;
+}
+.group-item td:hover .destroy {
+  display: block;
+}
+.group-item td:hover .hover-show {
+  display: block;
+}
+.admin-view {
+  font-family: helvetica, sans-serif;
+}
+.admin-view label {
+  font-size: 16px;
+}
+.admin-view h3 {
+  width: 20%;
+  display: inline;
+}
+.admin-view hr {
+  margin: 0 0 12px 0;
+}
+.admin-view a:hover {
+  text-decoration: none;
+}
+.admin-view .composedebat {
+  display: inline-block;
+  margin-bottom: 80px;
+}
+.admin-view .composedebat a {
+  color: black;
+}
+.stripes {
+  background-color: #e9e9e9;
+  background-image: -webkit-gradient(linear, left left, left right, from(#ffffff), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(left, #ffffff, #e9e9e9);
+  background-image: -moz-linear-gradient(left, #ffffff, #e9e9e9);
+  background-image: -o-linear-gradient(left, #ffffff, #e9e9e9);
+  background-image: -ms-linear-gradient(left, #ffffff, #e9e9e9);
+  background-image: linear-gradient(left, #ffffff, #e9e9e9);
+}
+.dotted {
+  background-image: url('img/dotted.png');
+}

@@ -1,0 +1,11 @@
+.slide.ng-enter, .slide.ng-leave {
+    -webkit-transition:0.5s linear all;
+    transition:0.5s linear all;
+}
+
+.slide.ng-enter { }        /* starting animations for enter */
+.slide.ng-enter.ng-enter-active { } /* terminal animations for enter */
+.slide.ng-leave {
+
+}
+.slide.ng-leave.ng-leave-active { }

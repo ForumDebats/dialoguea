@@ -1,5 +1,10 @@
-/*
- * graph drawing
+/* gd.less
+ *
+ * copyright 2015-2016 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ * graph drawing css
  */
 
 canvas { width:100%; height:100%;}

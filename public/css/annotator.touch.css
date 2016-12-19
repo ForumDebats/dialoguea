@@ -1,0 +1,56 @@
+/*  Annotator Touch Plugin - v1.1.1
+ *  Copyright 2012-2015, Compendio <www.compendio.ch>
+ *  Released under the MIT license
+ *  More Information: https://github.com/aron/annotator.touch.js
+ */
+
+.annotator-touch-widget .annotator-button {
+	cursor: pointer;
+	font-size: 20px;
+	color: #6C5241;
+	text-align: center;
+
+}
+
+.annotator-touch-widget .annotator-button[disabled] {
+	cursor: default;
+}
+
+.annotator-touch-widget .annotator-button::after {
+	left: 15px;
+}
+
+/* Adder Styles */
+
+.annotator-touch-controls {
+	position: fixed;
+	padding: 3px 10px;
+	font-weight: 700;
+	background-color: #FFF;
+	border-radius: 3px;
+	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.annotator-touch-controls.annotator-touch-hide {
+	display:none;
+}
+
+.annotator-button {
+	color: #6C5241;
+}
+
+
+.annotator-touch-widget .arrow{
+	color:transparent;
+	border-style: solid;
+	border-top-color: #FFF;
+	border-width: 5px 5px 0;
+	height: 0;
+	left: 50%;
+	margin-left: -5px;
+	position: absolute;
+	bottom: -5px;
+	width: 0;
+}
+
+
