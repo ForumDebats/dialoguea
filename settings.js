@@ -23,6 +23,6 @@ exports.configuration = {
 	THUMB: {WIDTH: 250, HEIGHT: 150},
 	GROUP_PUBLIC:'public',
 	ADMIN_GROUP : ['public'], //hide passwords
-	TEMPPOSTTIME: 30 , //seconds
+	TEMPPOSTTIME: 30 , //seconds when debugging, 4 mn in prod
 	MODE_PUBLIC: false
 };
