@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="dialoguea">
+<head>
+	<title>Dialoguea</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Dialoguea</title>
+
+	<link href="css/dialoguea.min.css" rel="stylesheet">
+
+	<link href="img/favicon2.png" rel="shortcut icon" type="image/png"/>
+	<script src="dist/tinymce/tinymce.min.js"></script>
+
+	<script src="Dialoguea-deps.js"></script>
+	<script src="Dialoguea.min.js"></script>
+
+	<meta charset="utf-8">
+
+</head>
+
+<body>
+<header class="site-header">
+	<div class="cf header-panel">
+		<a href="/#/"><h1 class="site-title">Dialoguea</h1></a>
+
+		<div class="credits">
+			<div class="inline" translate="MADE_BY"> réalisé par</div>
+			<a href="http://intactile.com" target="_blank">intactile DESIGN</a>,
+			<a href="http://forum-debats.fr" target="_blank">Forum des débats</a>
+
+			<div class="inline" translate="AND"> et</div>
+			<a href="mailto:phil.estival[AT]free.fr">Philippe Estival</a>
+		</div>
+		<login></login>
+	</div>
+</header>
+
+
+<div ng-include="'section/login-modal.html'" class="dialoguea-modal" ng-if="showLoginWindow"></div>
+<div ui-view class="view-container animate"></div>
+
+</body>
+
+</html>
