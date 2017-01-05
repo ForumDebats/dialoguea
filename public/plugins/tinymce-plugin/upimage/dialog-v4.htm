@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Upload an image</title>
+	<script type="text/javascript" src="js/dialog-v4.js"></script>
+	<script type="text/javascript" src="/dist/jquery/dist/jquery.min.js"></script>
+	<link href="css/dialog-v4.css" rel="stylesheet" type="text/css">
+	<script>
+		$(function () {
+
+			$('#form_upload').submit(function () {
+				$('#spinner').visible = true;
+				var xProgressID = guidGenerator();
+				$(this).attr('action', '/updbtimg?X-Progress-ID=' + xProgressID);
+				var uploadIntervalID = setInterval(function () {
+					$.get('/progressDbtImg?X-Progress-ID=' + xProgressID, function (data) {
+						if (data.status === 'done') {
+							clearInterval(uploadIntervalID);
+							console_dbg(data)
+							//$("#image").attr("src","/uploads/"+data.fileName)
+							//        .show();
+							$('#uploadbtn').hide();
+							jbImagesDialog.uploadFinish({
+								filename: "/data/" + data.fileName,
+								result: "/data/" + data.result,
+								resultCode: 0
+							});
+						}
+						updateViewUploadStatus(data);
+					}).error(function () {
+						clearInterval(uploadIntervalID)
+					});
+				}, 250);
+				return true;
+			});
+
+			function updateViewUploadStatus(data) {
+				console_dbg(data)
+			}
+
+			// http://stackoverflow.com/a/105074/464685
+			function guidGenerator() {
+				return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+			}
+
+			function S4() {
+				return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+			}
+		});
+	</script>
+</head>
+<body>
+
+
+<form action="/upload?X-Progress-ID=1" enctype="multipart/form-data"
+      method="post" id="form_upload" target="iframe_upload" style="margin:auto">
+
+	Sélectionner le fichier à partir de votre disque :
+	<input id="selectedFile" type="button" value="Sélectionner un fichier..."
+	       class="button bluebtn"
+	       onclick="document.getElementById('file').click();">
+
+	<input id="file" type="file" style='display: none;' name="file"
+	       accept="image/*"
+	       onChange="$('#form_upload').submit()"/>
+
+
+	<div id="upload_in_progress" class="upload_infobar">
+		<div id="upload_additional_info"></div>
+	</div>
+
+	<input id="uploadbtn" style="display:none" type="submit" value="Upload">
+	<img id="spinner" style="display:none" src="/dist/tinymce/plugins/upimage/img/spinner.gif" width="16" height="16"
+	     class="spinner">
+
+	<img id="image" src="" style="display:none">
+</form>
+<iframe id="iframe_upload" name="iframe_upload" style="display:none"></iframe>
+
+<!--
+<form action="/dl?X-Progress-ID=1" enctype="multipart/form-data"
+      method="post" id="form_dl" target="iframe_dl">
+
+    Télécharger le fichier à partir d'une URL :
+    <input type="text" name="upload" id="dl"
+           style="width:100%"
+           onChange="console_dbg('change'); $('#form_dl').submit()"><br/>
+    <div id="dl_in_progress" class="upload_infobar">
+        <div id="dl_additional_info"></div>
+    </div>
+
+    <input id="dlbtn" style="display:none" type="submit" value="Upload">
+    <img id="spinner2"  style="display:none" src="/dist/tinymce/plugins/upimage/img/spinner.gif" width="16" height="16" class="spinner">
+
+    <img id="image2" src="" style="display:none">
+</form>
+<iframe id="iframe_dl" name="iframe_upload" style="display:none"></iframe>
+-->
+
+</body>
+</html>

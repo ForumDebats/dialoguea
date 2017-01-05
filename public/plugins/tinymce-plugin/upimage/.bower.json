@@ -1,0 +1,13 @@
+{
+  "name": "husstboil",
+  "homepage": "https://github.com/vikdiesel/justboil.me",
+  "_release": "ff08ed665d",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ff08ed665d5ac94a2560c3990cd3ea2efba279f2"
+  },
+  "_source": "https://github.com/vikdiesel/justboil.me.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/vikdiesel/justboil.me.git"
+}
