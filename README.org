@@ -1,29 +1,32 @@
 
 * DIALOGUEA
 Commentaires de textes et débats collaboratifs
+[[https://dialoguea.fr]]
 
-
-#+BEGIN_COMMENT
 ** installation
-Clone the repository : =git clone https://github.com/ForumDebats/dialoguea.git=
 
-*** dependencies
+- nvm
+  https://github.com/creationix/nvm
+- sélectionner la version de node
+  =nvm install 4.2.3=
+- libvips 
+  requis par [[https://github.com/lovell/sharp.git][sharp]] les conversions des vignettes et d'images
+  =./scripts/install-libvips=
+- mongoDB
+  [[https://docs.mongodb.com/manual/administration/install-on-linux/][guide d'installation]]
+- dépendences
+  + =npm install= pour les dépendences côté serveur et
+  + =bower install= pour le frontend (vont dans =/public/dist/=)
+- ajouter les plugins tinymce
+=cd ./public/dist/tinymce/plugins; ln -s ../../../../public/js/tinymce-plugin/upimage=
 
-a mongo database
+- installer [[https://github.com/remy/nodemon][nodemon]]
+  =npm install -g nodemon=
+- ajouter un admin
+  =node server/adduser=
 
-libvips : =./install-libvips.sh=, required par [[https://github.com/lovell/sharp.git][sharp]].
+** démarrer le serveur
+  =nodemon server=
 
-
-Run =npm install= for server-side dependencies and
-=bower install= for frontend ones. They go in =/public/dist/=
-
-install nodemon :  =npm install -g nodemon=
-
-** star the server
-
-=nodemon server=
-
-or =run.sh= if you prefer to run the  =forever= loop (see =.foreverignore=)
-#+end_comment
 
 
