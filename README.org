@@ -5,30 +5,24 @@ Commentaires de textes et débats collaboratifs
 
 ** installation
 
-- nvm
-  https://github.com/creationix/nvm
-- sélectionner la version de node
+- node version manager : [[https://github.com/creationix/nvm][nvm]]
+- sélectionner la version de node :
   =nvm install 4.2.3=
-- libvips 
-  requis par [[https://github.com/lovell/sharp.git][sharp]] les conversions des vignettes et d'images
+- libvips :
+  requis par [[https://github.com/lovell/sharp.git][sharp]] les conversions des vignettes et d'images. 
   =./scripts/install-libvips=
-- mongoDB
-  [[https://docs.mongodb.com/manual/administration/install-on-linux/][guide d'installation]]
+- mongoDB : [[https://docs.mongodb.com/manual/administration/install-on-linux/][guide d'installation]]
 - dépendences
   + =npm install= pour les dépendences côté serveur et
   + =bower install= pour le frontend (vont dans =/public/dist/=)
-- ajouter les plugins tinymce
-=cd ./public/dist/tinymce/plugins; ln -s ../../../../public/js/tinymce-plugin/upimage=
-
+- ajouter les plugins [[https://www.tinymce.com/][tinymce]] : =./scripts/install-tinyup.sh=
 - installer [[https://github.com/remy/nodemon][nodemon]]
   =npm install -g nodemon=
 - configuer le fichier =settings.js=
-- ajouter un admin
-  =node server/adduser=
-- outils de minifications JS 
-=voir dans scripts/install-grunt.js=
+- ajouter des utilisateurs admin : =node server/adduser=
+- outils de minifications JS : voir dans =scripts/install-grunt.js=
 
-** Pour démarrer le serveur :
+** démarrer le serveur
   =nodemon server=
 
 
