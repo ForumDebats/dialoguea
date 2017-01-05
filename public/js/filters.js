@@ -1,3 +1,12 @@
+/**
+ * Dialoguea
+ * filters.js
+ *
+ * copyright 2014-2017 Intactile design, Forum des débats
+ * author : Philippe Estival -- phil.estival @ free.fr
+ * Released under the GPLv2 license
+ *
+ */
 
 // coupe à N lettres max en conservant les mots entiers
 function cutFilter () {
@@ -42,8 +51,6 @@ var autolinker = new Autolinker({truncate:35} );
 function linkFilter(){
 	return function(input) {
 		return autolinker.link(input);
-		//var re=/^^http(s)?:\/\/([a-zA-Z0-9-]+.)?([a-zA-Z0-9-]+.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}(:[0-9]+)?\/([a-zA-Z0-9_\-#?/]*|\/[a-zA-Z0-9\-?_]+\.[a-zA-Z]{1,4})?$/
-		//return re.test(url)
 	}
 }
 
