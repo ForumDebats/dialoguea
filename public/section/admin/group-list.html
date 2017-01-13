@@ -1,3 +1,5 @@
+
+
 <section class="admin-view childrenSelectable">
 
 	<div ng-init="addgrpshow=1">
@@ -29,8 +31,8 @@
 		<table class="group-list">
 
 			<tr class="group-item" ng-repeat="g in G.groups | orderBy:'+name'" >
-				<td class="select" ng-class="{'item-validator':validation=='yes' && !g.selected}" >
-					<div ng-if="validation=='yes'" style="height: 40px; overflow:hidden;">
+				<td class="select" ng-class="{'item-validator':selector && !g.selected}" >
+					<div ng-if="selector" style="height: 40px; overflow:hidden;">
 						<img ng-show="g.selected" class="validate validated" src="/img/validate1.png"
 						     ng-click="G.toggleGroup(g);$event.stopPropagation()" >
 						<img ng-show="!g.selected" class="validate hover-show" src="/img/validate0.png"

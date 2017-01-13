@@ -46,7 +46,7 @@
 
 					<div class="cat-item" style="float:right">
 						<img id="catDelImg" class="centerdiv"
-						     src="{{deletingCat.img ? deletingCat.img : null}}"
+						     ng-src="{{deletingCat.img ? deletingCat.img : null}}"
 						     style="max-width:200px "
 						     err-src="/img/logo.png"/>
 						<span>{{deletingCat.name}}</span>
@@ -55,7 +55,7 @@
 			</div>
 		</div>
 	</div>
-	</div>
+
 
 	<ul class="cat-list">
 		<li ng-repeat="c in C.cat" ng-class="{editing: c == C.editedCat}">

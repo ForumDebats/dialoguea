@@ -33,7 +33,7 @@ var app = angular.module('adminDialoguea',
 					templateUrl: 'section/admin/group-list.html',
 					controller: 'GroupsListCtrl',
 					controllerAs: 'G',
-					template: "<group-list validation='yes' selection='O.selection'></group-list>",
+					//template: "<group-list validation='yes' selection='O.selection'></group-list>",
 					data: {selector: true, section: 'opendebat.'}
 				})
 				.state('opendebat.group', {

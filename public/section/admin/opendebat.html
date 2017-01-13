@@ -5,7 +5,7 @@
 	<div class="composedebat">
 			<div id="participants" class="box" ng-click="O.select('groups')">
 				<a ui-sref="opendebat.groupList">
-					<img src="{{O.isSection('groups')?'/img/groupes-sel.png':'/img/groupes.png'}}" class="centerdiv">
+					<img ng-src="{{O.isSection('groups')?'/img/groupes-sel.png':'/img/groupes.png'}}" class="centerdiv">
 						<div class="items-selected">
 						<div ng-if="!hasSelection" class="center blackover" ng-class="{grey : !O.isSection('groups')}" >
 							Choisir un groupe de participants
@@ -20,7 +20,7 @@
 
 			<div id="documents" class="box" ng-click="O.select('docs')">
 				<a ui-sref="opendebat.categories">
-					<img src="{{O.isSection('docs')?'/img/docs-sel.png':'/img/docs.png'}}" class="centerdiv">
+					<img ng-src="{{O.isSection('docs')?'/img/docs-sel.png':'/img/docs.png'}}" class="centerdiv">
 					<div class="items-selected">
 						<div ng-if="!selectedDoc"
 						     class="center blackover"

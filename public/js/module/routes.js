@@ -119,11 +119,4 @@ var ROUTES = ['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
 			controller: 'NouveauDebatCtrl',
 			controllerAs: 'N'
 		})
-
-		/*.state('/test', {
-			url: '/test',
-			templateUrl: 'section/test_.html',
-			controller: 'TestCtrl',
-			controllerAs: 'T'
-		})*/
 }]
