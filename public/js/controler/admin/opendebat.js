@@ -23,13 +23,14 @@ angular.module('openDebat', ['ngResource',  'ngTouch'])
 			          $resource,  $scope, $rootScope, $sce, $http, $location, $window,$state) {
 
 				$state.go('opendebat.groupList')
+
 				var O = this;
 				O.docs = []
 				O.grps = []
-
-				$scope.hasSelection = false;
-				$rootScope.GrpSelection = {}
 				O.section = 'groups';
+				$scope.hasSelection = false;
+				$rootScope.selectedDoc = null
+				$rootScope.GrpSelection = {}
 
 				$scope.$on('groupSelectionForDebate', function () {
 					$scope.hasSelection = _.keys($rootScope.GrpSelection).length;
