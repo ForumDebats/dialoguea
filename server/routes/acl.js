@@ -9,8 +9,11 @@
  * access control layer
  */
 
-import DB from '../db'
+var DB = require('../db')
+import log from '../log'
+import {kdecodeb64} from '../sxor'
 
+/*
 exports.isAdmin = function (user, yes, no) {
 	if (!user || !user.uid) {
 		log.warn("admin privileges asked when no uid or user", user);
@@ -25,4 +28,34 @@ exports.isAdmin = function (user, yes, no) {
 			}
 		})
 	}
+}*/
+
+
+export function isAdmin(user, yes, no) {
+	if (!user || !user.uid) {
+		log.warn("Admin privileges asked when no uid or user", user);
+		return no();
+	}
+	else {
+		getUser(user.uid,
+				u => u && u.level > 499 ?
+				yes(u) : no(e)
+		)
+	}
+}
+
+function UNAUTHORIZED(res){
+	res.status(400).send('UNAUTHORIZED')
+}
+
+
+export function getUser(bkuid, oknext, konext) {
+	var duid = kdecodeb64(bkuid).toString()
+
+	DB.User.findOne({_id:duid},
+		(e,u)=> {
+			if (e) { log.error(e); konext(e) }
+			else { /*log.dbg(u);*/ oknext(u) }
+		}
+	)
 }

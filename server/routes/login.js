@@ -15,53 +15,54 @@ var DB = require('../db')
 	, traceRequest = require('./tracerequest')
 	, publicKey = require('../key').pub
 
+import {kencode} from '../sxor'
+
 /** à déplacer */
 var AdminMenu = "\
 <ul id='adminmenunav' class='nav nav-pills admin-nav'>\
-<li id='opendebat'><<a href='#/opendebat' onClick=\"selectMenu('opendebat')\"> Ouvrir un débat</a></li>\
+<li id='opendebat'><a href='#/opendebat' onClick=\"selectMenu('opendebat')\"> Ouvrir un débat</a></li>\
 <li id='groups'><a href='#/groupes' onClick=\"selectMenu('groups')\"> Groupes</a></li>\
 <li id='documents'><a href='#/categories' onClick=\"selectMenu('documents')\"> Documents</a></li>\
 <li id='debats'><a href='#/admdebats' onClick=\"selectMenu('debats')\"> Débats</a></li></ul>"
 
 var HypostasisBtns = "<div class='HypostaseBtns'><div id='hypostaseBtn' class='button-content'>Hypostase</div></div>"
 
-var login = exports.login = function(user, password, res, ok) {
+
+export function login(user, password, res, ok) {
 	if ((user && password )) {
 		// TODO : maintain the tokens/hash/user connected DB
 
 		DB.login(user, password, (u,e) => {
-			if (e) log.error(e)
+			if (e) log.dbg(e)
 			else if (!u) {
 				log.warn("authentication failure for user ", user)
-				res.status(401).send('Échec de connexion : nom d’utilisateur ou mot de passe incorrect')
+				res.status(401).send('Échec de connexion : nom d’utilisateur ou mot de passe incorrect');
 				// TODO : DB.loginAttempt(user)
 			}
 			else {
 				if(u.status==0) {
 					return res.status(401).send('Vous devez d\'abord activer votre compte. ' +
-						'Un email vous a été envoyé sur votre messagerie lors de votre inscription.')
+						'Un email vous a été envoyé sur votre messagerie lors de votre inscription.');
 				}
+
+				var uids=u._id.toString()
+				let uib=kencode(uids).toString('base64')
+
 				var profile = {
 					nom: u.nom,
 					prenom: u.prenom,
-					gid: u.gid, // must enforce access to /u/id
-					uid: u._id,
-					indicator: ''
+					gids: u.gids, // must enforce access to /u/id
+					uid:  uib  // send a hash + housemade hash
 				}
 
-				var token = jwtoken.sign(
-					profile,
-					publicKey,
-					{expiresIn: 60 * 60 * 24 } //seconds
-				)
+				var token = jwtoken.sign(profile, publicKey /*, {expiresInMinutes: 60 * 24 * 31}*/);
 
 				if (u.level > 499) {
 					log.dbg("admin login")
 					profile.indicator = "api/adm.js"
 					profile.panel = AdminMenu
 				}
-				if(u.canHypostase)
-					profile.extra = { hypostase : HypostasisBtns }
+
 				log.dbg("Logged IN :" + u.login)
 
 				ok(token, profile)
@@ -73,8 +74,7 @@ var login = exports.login = function(user, password, res, ok) {
 	}
 }
 
-
-exports.reqlogin = function (req, res) {
+export function reqlogin  (req, res) {
 	return login(req.body.username, req.body.password, res,
 		(token, profile) => {
 			res.status(200).json({
@@ -89,15 +89,13 @@ exports.reqlogin = function (req, res) {
 		})
 }
 
-exports.hello = function (req, res) {
+export function hello (req, res) {
 	if (req.user) {
-		log.dbg(req.user)
-		log.dbg(req.user.nom, req.user.uid, "logged in")
+		log.info(req.user.prenom,req.user.nom, "logged in")
 		res.status(200).send('HI');
 	}
 	else {
 		traceRequest(req)
-		//log.dbg("anonymous user") // sign the token and return anonymous
 		res.status(200).send('');
 	}
 }

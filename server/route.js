@@ -12,10 +12,12 @@
  * 18.11.15 major update : bridge revu et corrigé
  */
 
+import DB from './db'
+import * as ACL from './routes/acl'
+
 var   settings = require('../settings').configuration
 	, _   = require('underscore')
 	, log = require('./log')
-	, DB  = require('./db')
 	, io  = require('./messaging')
 	, utils = require('./utils')
 	, MongoRest = require('./mongorest')
@@ -29,7 +31,7 @@ var   settings = require('../settings').configuration
 	, login = require('./routes/login')
 	, traceRequest = require('./routes/tracerequest')
 	, userListing = require('./routes/userlisting')
-	, isAdmin = require('./routes/acl').isAdmin
+
 	//, methodOverride = require('method-override');
 
 
@@ -40,7 +42,7 @@ module.exports = function (app) {
 	// for CORS middleware
 	// app.use(methodOverride());
 	app.use(function(req, res, next) {
-		//traceRequest(req)
+		log.info(req.method, req.url,req.params,req.query)
 		//res.header("Access-Control-Allow-Origin", "*");
 		//res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		next();
@@ -53,9 +55,10 @@ module.exports = function (app) {
 		if (err.name === 'UnauthorizedError') {
 			log.dbg("anonymous access", req.url) //, req.headers ['user-agent']);
 
-			if ( settings.MODE_PUBLIC || req.user
+			if (( settings.MODE_PUBLIC || req.user )
 			// simply ask for a user to proceed
-				&& req.header('app') == 'dialoguea')
+			//	&& req.header('app') == 'dialoguea'
+			)
 			{
 				next()
 			}
@@ -77,22 +80,27 @@ module.exports = function (app) {
 
 	app.get("/api/adm.js", function (req, res, next) {
 		traceRequest(req)
-		//log.dbg("user?>", req.user)
-		restricted(req,res, function() {
-			log.dbg(settings)
+		restricted(req,res, ()=>{
 			res.sendFile( settings.ADMIN_MODULE )
 		})
 		//res.sendFile(__dirname + '/views/adminmodule.min.js')
 	});
 
 	function restricted(req,res,next) {
-		isAdmin( req.user, function() { next() },  function() { unauthorized(req,res)} )
+		try {
+			ACL.isAdmin(req.user, next, ()=>{ unauthorized(req, res)})
+		}
+		catch(err) {
+			log.dbg(err)
+			res.send('server error')
+		}
 	}
 
 	function unauthorized(req,res) {
 		log.warn("unauthorized access to",req.url,'user:',req.user);
 		return res.status(401).send();
 	}
+
 
 	app.post('/api/invite', invitationHandler )
 	app.post('/login', login.reqlogin );
@@ -153,22 +161,48 @@ module.exports = function (app) {
 	}
 
 	// Mount all the resource on /api prefix
-	var bridge = new MongoRest(app, {urlPrefix: '/api/', requestPrehandler: bridgeGuard, force: 'user'});
+	//var bridge = new MongoRest(app, {urlPrefix: '/api/', requestPrehandler: bridgeGuard, force: 'user'});
+	var bridge = new (require('./mongorest'))(app, { urlPrefix : '/api/'});
+
 	// Expose the collections via REST
 	// TODO  : specific RULES
+
 	bridge.addResource('groups', DB.Group);
-	bridge.addResource('cat', DB.Categorie, {
+	bridge.addResource('cat', DB.Category, {
 		query: { _id:0 },
 		hide : ['__v']
 	}); // todo:remove. must enforce cat/grp combo
 	bridge.addResource('docs', DB.Document);
 	bridge.addResource('debat', DB.Debat);
-	bridge.addResource('commentaires', DB.Commentaire, {
+	bridge.addResource('commentaires', DB.Comment, {
 			putPrehandler: CmtPutPrehandler, //update
 			//readOnly:['_id','uid','date','prenom','parentId','moderated','parent','temp'],
 			hide : ['__v']
 		}
 	)
+
+
+	function Route(method, route, func) {
+		app[method](
+			route,
+			(req,res)=>{
+				if(req.user && req.user.uid) {
+					ACL.getUser(
+						req.user.uid,
+						u => func(
+							req.body,
+							u._id,
+							ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
+							ko => { log.dbg(ko); res.status(400).send(ko) }
+						)
+					)
+				}
+				else {
+					log.dbg('missing user or uid')
+					res.status(400).send('unauthorized')
+				}
+			})
+	}
 
 	// TODO authorisations
 	var adminBridge = new MongoRest( app,
@@ -178,15 +212,20 @@ module.exports = function (app) {
 		});
 
 	adminBridge.addResource('users', DB.User);
-	adminBridge.addResource('cat', DB.Categorie, {
+	adminBridge.addResource('cat', DB.Category, {
 		query: { _id:0 }
 	});
+
+	Route('get','/api/cdebats', DB.cDbts)
 
 	app.param('cmtId', DB.cmtTree);
 	app.param('catId', DB.catId);
 	app.get('/api/cmt/:cmtId', DB.cmtTree); // isolate one comment, or create a new debate around it
 	app.get('/api/1cmt/:cmtId', DB.cmtQuery);
-	app.get('/api/cdebats', DB.cDbts);//with req.user.gid
+
+
+
+	//app.get('/api/cdebats', DB.cDbts);//with req.user.gid
 
 	app.get('/api/listedebats', DB.listeDebats);//with req.user.gid
 

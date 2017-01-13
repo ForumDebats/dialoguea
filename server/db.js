@@ -10,15 +10,20 @@
  * Database queries façade
  */
 
-import bcrypt from 'bcryptjs'
-import mongoose from 'mongoose'
-import _ from 'underscore'
 
-import schema from './db/schemas'
 import utils from './utils'
 import dl from './dl'
 import log from './log'
 import { configuration as settings } from '../settings'
+import schema from './db/schemas'
+
+var
+	mongoose = require('mongoose'),
+	bcrypt = require("bcryptjs"),
+	_ = require('underscore'),
+	async = require('async'),
+	ObjectId = mongoose.Schema.ObjectId
+	;
 
 mongoose.Promise = require('bluebird');
 
@@ -120,8 +125,6 @@ var DB = {
 	},
 
 
-
-
 	debatStats : function (id, next) {
 		DB.Comment.findById(id, (err, c)=>{
 			if (err) {
@@ -163,24 +166,23 @@ var DB = {
 	},
 
 	/** "jointure" : les catégories pour lesquelles ce groupe mène un débat */
-	cDbts : function (req, res) {
-		if (req.user) {
-			DB.findUser(req.user.uid, function (u) {
+	cDbts : function (data, uid, ok, ko) {
+
+		if (uid) {
+			DB.findUserById(uid, u => {
 				if (u) {
 					if (u.level > 499)
-						findCats(res, true )
-					else // request pub + private cats
-						findCats(res, false, u.gid)
+						findCats(ok, true )
+					else /** request pub and private cats */
+						findCats(ok, false, u.gid)
 				}
 			})
 		}
 		else {
-			//log.dbg('anon user request public debates')
-			findCats(res, false, false) // + public //todo
+			// anon user request public debates
+			findCats(ok, false, false) // + public //todo
 		}
-
 	},
-
 
 
 	grpCatDbts : function (req, res) {
@@ -188,7 +190,7 @@ var DB = {
 		let cat = req.catId
 
 		if (req.user) // request public + private groups
-			DB.findUser(req.user.uid, u=>{
+			DB.findUserById(req.user.uid, u=>{
 				if (u)
 					if (u.level > 499)
 						findDbts(res, cat, true)
@@ -294,7 +296,7 @@ var DB = {
 
 
 	AllDebates : function (req, res) {
-
+	log.dbg('??,')
 		DB.Debat.find({})
 		.populate('rootCmt', {_id: 1, citation: 1, reformulation: 1, path: 1})
 		.populate('gids', {name: 1, _id: 1})
@@ -422,7 +424,7 @@ module.exports = DB
 
 
 
-function findCats(res, all, gid) {
+function findCats(reply, all, gid) {
 
 	var groupFilter = all ? {}
 		: gid ? {gids:{$in:[gid, DB.GPublic._id]}}
@@ -460,10 +462,11 @@ function findCats(res, all, gid) {
 						A.push(c)
 					})
 					//log.dbg(A[0])
-					res.send(A)
+					
+					reply(A)
 				})
 			}
-			else res.send('')
+			else reply('')
 		})
 }
 

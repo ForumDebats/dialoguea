@@ -40,7 +40,7 @@ process.on('uncaughtException', function (err) {
  }
  //var cors=require('cors')({credentials:true,origin: ''})
  */
-log.dbg(__dirname + '../public')
+
 let app = express()
 	.use(bodyParser.json())
 	.use(express.static(__dirname + '/../public'))
