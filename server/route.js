@@ -40,6 +40,7 @@ module.exports = function (app) {
 	// for CORS middleware
 	// app.use(methodOverride());
 	app.use(function(req, res, next) {
+		traceRequest(req)
 		//res.header("Access-Control-Allow-Origin", "*");
 		//res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		next();
@@ -50,7 +51,7 @@ module.exports = function (app) {
 
 	app.use(function (err, req, res, next) {
 		if (err.name === 'UnauthorizedError') {
-			//log.dbg("anonymous access", req.url) //, req.headers ['user-agent']);
+			log.dbg("anonymous access", req.url) //, req.headers ['user-agent']);
 
 			if ( settings.MODE_PUBLIC || req.user
 			// simply ask for a user to proceed
@@ -128,7 +129,7 @@ module.exports = function (app) {
 	 })*/
 
 	var bridgeGuard = function(req,res,next) {
-		//traceRequest(req)
+		traceRequest(req)
 		next()
 	}
 
@@ -207,7 +208,7 @@ module.exports = function (app) {
 
 	app.post('/apiadm/deldebate', function(req,res) {
 		restricted ( req, res, function () {
-			log.dbgAr("deleting",req.body)
+			log.dbg("deleting",req.body)
 			if (req.body.id) {
 				DB.delDebate(req.body.id, function (d) {
 					res.status(200).send('')
@@ -226,5 +227,6 @@ module.exports = function (app) {
 	app.get('/progress',        function (req, res) { uploadHandler.progress(req, res); });
 
 	/*app.get('*', function(req,res) {res.render('404');})*/
+
 };
 

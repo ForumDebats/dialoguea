@@ -9,7 +9,7 @@
  * access control layer
  */
 
-var DB = require('../db')
+import DB from '../db'
 
 exports.isAdmin = function (user, yes, no) {
 	if (!user || !user.uid) {

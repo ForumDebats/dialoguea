@@ -10,64 +10,59 @@
  *
  */
 
-var log = require('./server/log');
+
+import log from './log'
+import { configuration as settings } from '../settings'
+import express from 'express'
+import bodyParser from 'body-parser'
+import mongoose from 'mongoose'
+import pack from '../package.json'
+import db from './db'
+import route from './route'
+import cront from './cron'
+
+var messaging = require('./messaging')
+
+log.info("" + pack.name+ " v" + pack.version + " starts (pid:"+process.pid+") █");
 
 process.on('uncaughtException', function (err) {
+	console.log('oups')
 	log.error(err.stack)
 	process.exit(1)
 })
-log.info("------- DIALOGUEA starts (PID:" + process.pid + ") -------");
-
-express = require('express');
-require('./server/db.js');
-require('./server/cron.js');
-
-var bodyparser = require('body-parser');
-messaging = require('./server/messaging');
-settings = require('./settings').configuration;
 
 /*
-var allowCrossDomain = function(req, res, next) {
-	res.header('Access-Control-Allow-Origin', 'dialoguea.fr');
-	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-	res.header('Access-Control-Allow-Headers', 'Content-Type');
-	next();
-}
-//var cors=require('cors')({credentials:true,origin: ''})
-*/
+ var allowCrossDomain = function(req, res, next) {
+ res.header('Access-Control-Allow-Origin', 'dialoguea.fr');
+ res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+ res.header('Access-Control-Allow-Headers', 'Content-Type');
+ next();
+ }
+ //var cors=require('cors')({credentials:true,origin: ''})
+ */
+log.dbg(__dirname + '../public')
+let app = express()
+	.use(bodyParser.json())
+	.use(express.static(__dirname + '/../public'))
+	.set('port',settings.PORT)
+//.use(cors)
+//.options('*', cors); // include before other routes
 
-app = express()
-	.use(bodyparser.json({limit: '12mb'}))
-	.use(express.static(__dirname + '/public'));
-	//.use(cors)
-	//.options('*', cors); // include before other routes
-//app.use(cors)
+var server = require('http').createServer(app);
 
-app.set('port', settings.PORT)
-var server = require('http').createServer(app)
-require('./server/route')(app)
-require('./server/routes/register').routes(app)
+require('./route')(app);
+require('./routes/register').routes(app)
 
-mongoose = require('mongoose')
 mongoose.connect(settings.MONGO + settings.DB)
-mongoose.connection.on('error', function (e) {log.dbg('Mongoose connection error',e);});
-mongoose.connection.once('open', function callback() {log.dbg("DB",settings.DB,"ready");});
-// only use to serve content outside of the public static route
-// not as render engine
-swig = require('swig');
-swig.setDefaults({
-	//cache: false,
-	varControls: ['[[', ']]']
-})
+mongoose.connection.once('open',() => log.dbg("Database [",settings.DB,"] up and ready"))
+mongoose.connection.on('error',  e => log.error('Mongoose connection error',e))
 
-// Views and template
-app.engine('html', swig.renderFile);
-app.set('view engine', 'html');
-app.set('views', './server/views');
-app.set('view cache', false);
+app.set('view engine', 'html')
+app.set('views', './views')
+app.set('view cache', false)
 
-messaging.listen(server)
+server.listen(app.get('port'))
+//messaging.listen(server)
+log.info("http://"+settings.SERVER)
 
-log.info("http://"+settings.SERVER+":"+settings.PORT);
-log.dbg('started')
 

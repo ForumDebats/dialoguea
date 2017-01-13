@@ -18,8 +18,12 @@ module.exports = function(req) {
 	/*var D = new Date();
 	var d = (D.getMonth() + 1) + "-" + D.getDate() + " " + +D.getHours() + ":" + D.getMinutes() + ":" + D.getSeconds()
 	*/
-	log.dbgAr(ip, "user:", (req.user ? req.user.nom : 'anonymous'), req.headers['user-agent'], req.headers['referer'],
-		req.method, req.url,req.params,req.query
+	log.dbg(
+		ip, "user:", (req.user ? req.user.nom : 'anonymous'),
+		req.headers['user-agent'],
+		req.headers['referer'],
+		req.method,
+		req.url,req.params,req.query
 		)
 
 	// todo put this in profile or bugreport

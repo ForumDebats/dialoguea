@@ -10,12 +10,13 @@
 
 var log = require('./log')
 
-exports.urlValid = urlValid = function (url) {
+var urlValid = function (url) {
 	var re=/^^http(s)?:\/\/([a-zA-Z0-9-]+.)?([a-zA-Z0-9-]+.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}(:[0-9]+)?\/([a-zA-Z0-9_\-#?/]*|\/[a-zA-Z0-9\-?_]+\.[a-zA-Z]{1,4})?$/
 	//var re=/^^http(s)?:\/\/([a-zA-Z0-9-]+.)?([a-zA-Z0-9-]+.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}(:[0-9]+)?(\/[\w_]*\/?|\/[a-zA-Z0-9_]+\.[a-zA-Z]{1,4})?$/
 	return re.test(url)
 }
 
+exports.urlValid = urlValid
 exports.validUrlImg = function validUrlImg(url) {
 	log.dbg(typeof(url))
 	if (urlValid(url)

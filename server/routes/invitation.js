@@ -12,6 +12,8 @@
 var mailer = require('../mailer'),
 	DB = require('../db'),
 	settings = require('../../settings')
+
+
 module.exports = function (req, res) {
 	log.dbgAr(req.user)
 	DB.findUserById(req.user.uid, function (u) {

@@ -5,7 +5,7 @@
 
 var upload_dir = 'data/'
 
-exports.configuration = {
+export var configuration = {
 
 	APP: 'dialoguea',
 	SITE: 'https://dialoguea.io',

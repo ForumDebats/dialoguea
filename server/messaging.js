@@ -12,12 +12,12 @@
  *
  */
 
+import log from './log'
+import db from './db'
+
 var
-db = require('./db'),
-log = require('./log'),
-Group = require('mongoose').model('Group'),
-io = require('socket.io'),
-connectedUsers=0
+	io = require('socket.io'),
+	connectedUsers=0
 
 /*io.configure(function () {
     io.set("transports", ["xhr-polling"]);
@@ -43,10 +43,7 @@ exports.listen = function (server) {
     log.info('socket messaging initialized')
     io = io.listen(server);
 
-    server.listen(app.get('port'));
-    log.info("server listening on port " + app.get('port'));
-
-    io.sockets.on('connection', function (socket) {
+    io.sockets.on('connection', socket=>{
         connectedUsers++
         //log.dbg(socket.id,'socket connected');
 
@@ -75,6 +72,7 @@ exports.listen = function (server) {
                 }else{log.error("user",data.uid,"not found")}
             });
         });
-
     });
+
+
 }

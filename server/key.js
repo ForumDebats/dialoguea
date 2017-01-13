@@ -14,5 +14,5 @@ var
   jwt = require('express-jwt')
 , fs = require('fs')
 
-exports.pub = publicKey = fs.readFileSync('key.pub')
+var publicKey = exports.pub = fs.readFileSync('./key.pub')
 jwt({secret: publicKey});

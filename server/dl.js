@@ -20,12 +20,14 @@ var http = require('http')
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
-createFolders=function(){
+/*
+var createFolders=function(){
 	try{
 		fs.mkdir(uploads, function(){});
 	}
 	catch(e){}
 }()
+*/
 
 exports.dl = function(url,next,sizeCb, failed) {
 

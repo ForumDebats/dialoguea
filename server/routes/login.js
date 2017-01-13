@@ -30,7 +30,7 @@ var AdminMenu =
 
 var HypostasisBtns = "<div class='HypostaseBtns'><div id='hypostaseBtn' class='button-content'>Hypostase</div></div>"
 
-exports.login = login = function(user, password, res, ok) {
+var login = exports.login = function(user, password, res, ok) {
 	if ((user && password )) {
 		// TODO : maintain the tokens/hash/user connected DB
 
