@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "bcryptjs": "latest",
+    "bluebird": "^3.4.6",
     "body-parser": "latest",
     "callsite": "latest",
     "cron": "latest",

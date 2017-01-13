@@ -16,17 +16,12 @@ var DB = require('../db')
 	, publicKey = require('../key').pub
 
 /** à déplacer */
-var AdminMenu =
-	"<ul id='adminmenunav' class='nav nav-pills admin-nav'>"
-	+ "<li id='opendebat'>"
-	+ "<a href='#/opendebat' onClick=\"selectMenu('opendebat')\"> Ouvrir un débat</a></li>"
-	+ "<li id='groups'>"
-	+ "<a href='#/groupes' onClick=\"selectMenu('groups')\"> Groupes</a></li>"
-	+ "<li id='documents'>"
-	+ "<a href='#/categories' onClick=\"selectMenu('documents')\"> Documents</a></li>"
-	+ "<li id='debats'>"
-	+ "<a href='#/admdebats' onClick=\"selectMenu('debats')\"> Débats</a></li>"
-	+ "</ul>"
+var AdminMenu = "\
+<ul id='adminmenunav' class='nav nav-pills admin-nav'>\
+<li id='opendebat'><<a href='#/opendebat' onClick=\"selectMenu('opendebat')\"> Ouvrir un débat</a></li>\
+<li id='groups'><a href='#/groupes' onClick=\"selectMenu('groups')\"> Groupes</a></li>\
+<li id='documents'><a href='#/categories' onClick=\"selectMenu('documents')\"> Documents</a></li>\
+<li id='debats'><a href='#/admdebats' onClick=\"selectMenu('debats')\"> Débats</a></li></ul>"
 
 var HypostasisBtns = "<div class='HypostaseBtns'><div id='hypostaseBtn' class='button-content'>Hypostase</div></div>"
 
@@ -34,17 +29,17 @@ var login = exports.login = function(user, password, res, ok) {
 	if ((user && password )) {
 		// TODO : maintain the tokens/hash/user connected DB
 
-		DB.login(user, password, function (u, e) {
-			if (e) log.dbg(e)
+		DB.login(user, password, (u,e) => {
+			if (e) log.error(e)
 			else if (!u) {
 				log.warn("authentication failure for user ", user)
-				res.status(401).send('Échec de connexion : nom d’utilisateur ou mot de passe incorrect');
+				res.status(401).send('Échec de connexion : nom d’utilisateur ou mot de passe incorrect')
 				// TODO : DB.loginAttempt(user)
 			}
 			else {
 				if(u.status==0) {
 					return res.status(401).send('Vous devez d\'abord activer votre compte. ' +
-						'Un email vous a été envoyé sur votre messagerie lors de votre inscription.');
+						'Un email vous a été envoyé sur votre messagerie lors de votre inscription.')
 				}
 				var profile = {
 					nom: u.nom,
@@ -52,8 +47,13 @@ var login = exports.login = function(user, password, res, ok) {
 					gid: u.gid, // must enforce access to /u/id
 					uid: u._id,
 					indicator: ''
-				};
-				var token = jwtoken.sign(profile, publicKey, {expiresInMinutes: 60 * 24 * 31});
+				}
+
+				var token = jwtoken.sign(
+					profile,
+					publicKey,
+					{expiresIn: 60 * 60 * 24 } //seconds
+				)
 
 				if (u.level > 499) {
 					log.dbg("admin login")
@@ -76,18 +76,22 @@ var login = exports.login = function(user, password, res, ok) {
 
 exports.reqlogin = function (req, res) {
 	return login(req.body.username, req.body.password, res,
-		function (token, profile) {
+		(token, profile) => {
 			res.status(200).json({
-				token: token, uid: profile.uid,
-				nom: profile.nom, prenom: profile.prenom,
-				indicator: profile.indicator, panel: profile.panel, extra: profile.extra
+				token: token,
+				uid: profile.uid,
+				nom: profile.nom,
+				prenom: profile.prenom,
+				indicator: profile.indicator,
+				panel: profile.panel,
+				extra: profile.extra
 			})
 		})
 }
 
 exports.hello = function (req, res) {
 	if (req.user) {
-		log.dbgAr(req.user)
+		log.dbg(req.user)
 		log.dbg(req.user.nom, req.user.uid, "logged in")
 		res.status(200).send('HI');
 	}

@@ -137,6 +137,7 @@ function addCallSite(logger, levels) {
 }
 
 addCallSite(logger, {debug: 1})
+addCallSite(logger, {error: 1})
 
 logger.dbg = logger.debug
 logger._silly = logger.silly // only for visibility outside package

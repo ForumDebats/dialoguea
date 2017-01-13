@@ -15,7 +15,7 @@ var mailer = require('../mailer'),
 
 
 module.exports = function (req, res) {
-	log.dbgAr(req.user)
+	log.dbg(req.user)
 	DB.findUserById(req.user.uid, function (u) {
 		if(u) {
 			log.dbg("invitation à ", req.body.inviteEmail, "de:", u.prenom, " debat:", req.body.auteur, req.body.titre)

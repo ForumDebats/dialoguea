@@ -22,7 +22,7 @@ module.exports = function (req, res) {
 				userlist = req.body.userlist,
 				gid = req.body.gid;
 
-			//log.dbgAr(req.body.gid)
+			//log.dbg(req.body.gid)
 			if (userlist.length == 0) {
 				return res.status(401).send('la liste est vide')
 			}

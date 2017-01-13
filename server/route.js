@@ -40,7 +40,7 @@ module.exports = function (app) {
 	// for CORS middleware
 	// app.use(methodOverride());
 	app.use(function(req, res, next) {
-		traceRequest(req)
+		//traceRequest(req)
 		//res.header("Access-Control-Allow-Origin", "*");
 		//res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		next();
@@ -129,7 +129,7 @@ module.exports = function (app) {
 	 })*/
 
 	var bridgeGuard = function(req,res,next) {
-		traceRequest(req)
+		//traceRequest(req)
 		next()
 	}
 

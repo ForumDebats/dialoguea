@@ -27,7 +27,7 @@ exports.routes = function (app) {
 
 	app.post('/newaccount', function (req, res) {
 		var user = {prenom: req.body.prenom, nom: req.body.nom, email: req.body.email, password: req.body.password}
-		log.dbgAr("NEW ACCOUNT REGISTRATION:", user)
+		log.dbg("NEW ACCOUNT REGISTRATION:", user)
 
 		var goodpassword = 1;
 		if (user.password && user.password.length > 7) {

@@ -11,7 +11,7 @@
 
 import schema from './schemas'
 import DB from '../db'
-
+import log from '../log'
 
 /** nouvel utilisateur. Lui génèrer un mot de passe
  * !=  de l'enregistrement par mail

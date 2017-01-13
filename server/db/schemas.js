@@ -155,8 +155,7 @@ function setFieldsRequiredByDefautlt(schema) {
 	})
 }
 
-let collections = [
-	schema.User,
+let default_required_collections = [
 	schema.Group,
 	schema.Debat,
 	schema.Categorie,
@@ -164,11 +163,8 @@ let collections = [
 	schema.Commentaire
 ];
 
-setFieldsRequiredByDefautlt(collections);
-collections.forEach(function(schema) {
-	schema.add({ creation_date: Date, required:false })
-	schema.add({ updated_date: Date, required:false })
-})
+setFieldsRequiredByDefautlt(default_required_collections);
+
 
 function setCreateOrUpdateDate(next) {
 	log.dbg('update middleware called')
@@ -180,7 +176,22 @@ function setCreateOrUpdateDate(next) {
 	next()
 }
 
-collections.forEach( c => c.pre('save', setCreateOrUpdateDate) )
+let autodate_collections = [
+	schema.Group,
+	schema.Debat,
+	schema.Categorie,
+	schema.Document,
+	schema.Commentaire,
+	schema.Group
+]
+
+
+autodate_collections.forEach(function(schema) {
+	schema.add({ creation_date: Date, required:false })
+	schema.add({ updated_date: Date, required:false })
+})
+
+autodate_collections.forEach( c => c.pre('save', setCreateOrUpdateDate) )
 
 
 module.exports = schema

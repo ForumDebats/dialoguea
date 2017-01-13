@@ -20,7 +20,10 @@ import dl from './dl'
 import log from './log'
 import { configuration as settings } from '../settings'
 
+mongoose.Promise = require('bluebird');
+
 require('./db/middleware')
+
 
 /* TODO
 loginACLpolicy = {
@@ -45,14 +48,15 @@ var DB = {
 	GPublic: undefined,
 
 	findUserById: function (id, next) {
-		User.findById(id, (e, u) => {
+		DB.User.findById(id, (e, u) => {
 			if (e) log.error(e)
 			if (next) next(u)
 		});
 	},
 
 	findUser: function (field, next) {
-		User.findOne(field, (e, u) => {
+		log.dbg(field)
+		DB.User.findOne(field, (e, u) => {
 			if (e) log.error(e)
 			if (next) next(u)
 		});
@@ -70,7 +74,7 @@ var DB = {
 	cmtTree: function (req, res, next, id) {
 
 		try {
-			Comment.findById(id).exec((err, c) => {
+			DB.Comment.findById(id).exec((err, c) => {
 				if (err) {
 					log.error("(no such comment)")
 					return res.status(404).json('no such comment');
@@ -108,7 +112,7 @@ var DB = {
 	// dump des commentaires // todo à degager
 	cmtQuery : function (req, res) {
 		log.dbg("query Commentaire")
-		Comment.find().exec( (err, c)=>{
+		DB.Comment.find().exec( (err, c)=>{
 			log.dbg(c)
 			if (err) return res.json(500, err);
 			else res.json(c);
@@ -119,7 +123,7 @@ var DB = {
 
 
 	debatStats : function (id, next) {
-		Comment.findById(id, (err, c)=>{
+		DB.Comment.findById(id, (err, c)=>{
 			if (err) {
 				log.error(err)
 			}
@@ -196,7 +200,7 @@ var DB = {
 			var filter = all ? {categorie: cat}
 				             : gid ? {gids:{$in:[gid,DB.GPublic._id]}, categorie: cat}
 				                   : {gids:DB.GPublic._id, categorie: cat}
-			Debat.find(filter)
+			DB.Debat.find(filter)
 				.populate('rootCmt', {_id: 1, citation: 1, reformulation: 1, path: 1})
 				.populate('gids', {name: 1, _id: 0})
 				.exec( (err, D) => { // don't filter the groups
@@ -206,7 +210,7 @@ var DB = {
 					var R = []
 					var args = {recursive: true, fields: {_id: 1, children: 1, avis: 1}};
 					D.forEach( Dx => {
-						Comment.findById(
+						DB.Comment.findById(
 							{_id: Dx.rootCmt._id},
 							{_id: 1, citation: 1, reformulation: 1, path: 1},
 							(e, C) => {
@@ -245,9 +249,9 @@ var DB = {
 
 		DB.findUser(req.user.uid, (u)=> {
 			var grfilter = u.gid ? {gid: u.gid} : {}
-			//log.dbgAr("group ?", grfilter)
+			//log.dbg("group ?", grfilter)
 
-			Debat.find(grfilter)
+			DB.Debat.find(grfilter)
 				.populate('rootCmt', {_id: 1, citation: 1, reformulation: 1, path: 1})
 				.populate('gids', {name: 1, _id: 0})
 				.exec( (err, D)=>{ // don't filter the groups
@@ -259,7 +263,7 @@ var DB = {
 						if (Dx.rootCmt == null)
 							log.dbg(Dx._id, Dx.rootCmt)
 						else
-							Comment.findById(
+							DB.Comment.findById(
 								{_id: Dx.rootCmt._id},
 								{_id: 1, citation: 1, reformulation: 1, path: 1},
 								(e, C) => {
@@ -291,7 +295,7 @@ var DB = {
 
 	AllDebates : function (req, res) {
 
-		Debat.find({})
+		DB.Debat.find({})
 		.populate('rootCmt', {_id: 1, citation: 1, reformulation: 1, path: 1})
 		.populate('gids', {name: 1, _id: 1})
 		.populate('categorie',{_id:1,name:1})
@@ -303,7 +307,7 @@ var DB = {
 			var args = {recursive: true, fields: {_id: 1, children: 1, avis: 1}};
 			D.forEach( Dx => {
 				//log.dbg(Dx)
-				Comment.findById(
+				DB.Comment.findById(
 					{_id: Dx.rootCmt._id},
 					{_id: 1, citation: 1, reformulation: 1, path: 1},
 					(e, C)=>{
@@ -335,7 +339,7 @@ var DB = {
 		var query = {_id: id},
 			update = {status: date ? -1 : 0, dateFermeture: date},
 			options = {new: true};
-		Debat.findOneAndUpdate(query, update, options, function (err, d) {
+		DB.Debat.findOneAndUpdate(query, update, options, function (err, d) {
 			if (err) {
 				log.dbg('Error on open/close debate', err);
 			} else {
@@ -352,7 +356,7 @@ var DB = {
 	},
 
 	delDebate : function (id, next) {
-		Debat.findById(id, (e, d)=>{
+		DB.Debat.findById(id, (e, d)=>{
 			log.dbg("debat DELETED : (", d.titre, d._id, ") root:",d.rootCmt)
 			DB.Group.update({_id: {$in: d.gids}}, {
 				$inc: {
@@ -379,11 +383,10 @@ var DB = {
 	},
 
 	login : function (login, password, cbk) {
-		User.findOne({login: login}, (err, u)=>{
+		DB.User.findOne({login: login}, (err, u)=>{
 			if (err) log.dbg(err)
 			else {
 				if (!u) {
-					log.info(login, "not found");
 					cbk(null)
 				}
 				else {
@@ -424,7 +427,7 @@ function findCats(res, all, gid) {
 	var groupFilter = all ? {}
 		: gid ? {gids:{$in:[gid, DB.GPublic._id]}}
 		: {gids: DB.GPublic._id}
-	//log.dbgAr(groupFilter)
+	//log.dbg(groupFilter)
 	//headache starts here
 	//Debat.aggregate([{$match: groupFilter}, {$unwind: "$categorie"},
 	//	{"$group": {count: {$sum: 1}, _id: null, categories: {"$addToSet": "$categorie"}}}],
@@ -443,11 +446,11 @@ function findCats(res, all, gid) {
 		(e, D)=>{
 			let T=[],R=[],A=[]
 			_.each(D, d => {
-				//log.dbgAr(d)
+				//log.dbg(d)
 				T.push(d.categories)
 				R.push({_id:String(d.categories), count:d.count})
 			})
-			//log.dbgAr(R)
+			//log.dbg(R)
 			if(T.length) {
 				DB.Category.find({_id: {$in: T}}, (e, C)=>{
 					//log.dbg(C)
@@ -456,7 +459,7 @@ function findCats(res, all, gid) {
 						c.count = _.find(R, r => { return (r._id == String(c._id))}).count
 						A.push(c)
 					})
-					//log.dbgAr(A[0])
+					//log.dbg(A[0])
 					res.send(A)
 				})
 			}
