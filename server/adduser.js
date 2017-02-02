@@ -82,12 +82,12 @@ function onErr(err) {
 	return 1;
 }
 
-nusers = [
+var nusers = [
 {  name: 'add1user',
    message: 'add 1 unique user (or a list, next choice) [y]yes ?'.white
 }]
 
-userlist = [
+var userlist = [
 {  name: 'file',
    message: 'enter file list ?'.white
 }]
@@ -144,7 +144,7 @@ var start = function () {
             return onErr(err);
          }
 
-         adduser(user,mailer.sendPassToUser)
+         adduser(input,mailer.sendPassToUser)
       });
    }
 

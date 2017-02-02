@@ -12,9 +12,9 @@ export var configuration = {
 	SERVER: "localhost:2015",
 	PROTOCOL: "http://",
 	PORT: 2015,
-	DEBUG: false,
+	DEBUG: true,
 	LOG_FILE:'./logs/server.log', // todo rotations
-	MONGO:'mongodb://localhost/', // todo sql layer
+	MONGO:'mongodb://127.0.0.1/', // todo sql layer
 	DB: 'dialo',
 	MAILER: {
 		provider: 'GandiMail',
@@ -29,6 +29,7 @@ export var configuration = {
 	THUMB: {WIDTH: 250, HEIGHT: 150},
 	GROUP_PUBLIC:'public',
 	ADMIN_GROUP : ['public'], //only to hide passwords
-	TEMPPOSTTIME: 30 , //seconds
+	TEMPPOSTTIME: 60 , //seconds
+	UIDKEY:'3kinfDBcwdpGvuId',
 	MODE_PUBLIC: true
 };

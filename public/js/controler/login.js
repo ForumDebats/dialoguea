@@ -62,7 +62,7 @@ angular.module('login', ['oc.lazyLoad'])
 		function ($rootScope, $http, $window, $sce, $translate, $ocLazyLoad, $scope, $timeout, $location) {
 
 			$rootScope.credits = true;
-			$rootScope.showLoginWindow = !Settings.default_login_policy;// set it to true by default to force login on opening
+			$rootScope.showLoginWindow = Settings.default_login_policy;// set it to true by default to force login on opening
 			var L = this
 			L.createAccountAllowed = Settings.createAccountAllowed
 

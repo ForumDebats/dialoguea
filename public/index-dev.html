@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="dialoguea">
+<head>
+	<title>Dialoguea</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta charset="utf-8">
+	<link href="css/dialoguea.min.css" rel="stylesheet">
+	<link href="img/favicon2.png" rel="shortcut icon" type="image/png"/>
+	
+	<script src="dist/jquery/dist/jquery.min.js"></script>
+	<script src="dist/angular/angular.min.js"></script>
+	<script src="dist/angular-touch/angular-touch.min.js"></script>
+	<script src="dist/angular-animate/angular-animate.min.js"></script>
+	<script src="dist/angular-route/angular-route.min.js"></script>
+	<script src="dist/angular-resource/angular-resource.min.js"></script>
+	<script src="dist/angular-messages/angular-messages.min.js"></script>
+	<script src="dist/angular-sanitize/angular-sanitize.min.js"></script>
+	<script src="dist/angular-translate/angular-translate.min.js"></script>
+	<script src="dist/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script src="dist/Autolinker.js/dist/Autolinker.min.js"></script>
+	<script src="dist/bcryptjs/dist/bcrypt.min.js"></script>
+	<script src="dist/underscore/underscore-min.js"></script>
+	<script src="dist/d3/d3.min.js"></script>
+	<script src="dist/nanobar/nanobar.min.js"></script>
+	<script src="dist/oclazyload/dist/ocLazyLoad.min.js"></script>
+	<script src="lang/angular-locale_fr-fr.js"></script>
+	<script src="js/d3.ay-pie-chart.js"></script>
+    <script src="dist/tinymce/tinymce.min.js"></script>
+	<script src="js/utils.js"></script>
+	<script src="js/filters.js"></script>
+	<script src="js/directive/mouse.js"></script>
+	<script src="js/annotation.js"></script>
+	<script src="js/annotation-touch.js"></script>
+	<script src="js/factory/restfactory.js"></script>
+	<script src="js/factory/auth.js"></script>
+	<script src="js/factory/socket.js"></script>
+	<script src="js/factory/broadcast.js"></script>
+	<script src="js/controler/translation.js"></script>
+	<script src="js/directive/clickonce.js"></script>
+	<script src="js/directive/keys.js"></script>
+	<script src="js/directive/emailvalid.js"></script>
+	<script src="js/directive/checkstrength.js"></script>
+	<script src="js/controler/message.js"></script>
+	<script src="js/controler/login.js"></script>
+	<script src="js/directive/emailvalid.js"></script>
+	<script src="js/directive/tinymce.js"></script>
+	<script src="js/controler/debat.js"></script>
+	<script src="js/controler/nouveaudebat.js"></script>
+	<script src="js/controler/categories.js"></script>
+	<script src="js/controler/listedebats.js"></script>
+	<script src="js/controler/cdebats.js"></script>
+	<script src="js/controler/debats.js"></script>
+	<script src="js/controler/restitution.js"></script>
+	<script src="js/controler/synthese.js"></script>
+	<script src="js/controler/account/activate.js"></script>
+	<script src="js/controler/account/register.js"></script>
+	<script src="js/controler/account/requestpass.js"></script>
+	<script src="js/controler/account/updatepass.js"></script>
+	<script src="js/module/account.js"></script>
+	<script src="js/module/routes.js"></script>
+	<script src="js/settings.js"></script>
+	<script src="js/module/dialoguea.js"></script>
+
+</head>
+
+<body>
+<header class="site-header">
+	<div class="cf header-panel">
+		<a href="/#/"><h1 class="site-title">Dialoguea</h1></a>
+
+		<div class="credits">
+			<div class="inline" translate="MADE_BY"> réalisé par</div>
+			<a href="http://intactile.com" target="_blank">intactile DESIGN</a>,
+			<a href="http://forum-debats.fr" target="_blank">Forum des débats</a>
+
+			<div class="inline" translate="AND"> et</div>
+			<a href="mailto:phil.estival[AT]free.fr">Philippe Estival</a>
+		</div>
+		<login></login>
+	</div>
+</header>
+
+<div ng-include="'section/login-modal.html'" class="dialoguea-modal" ng-if="showLoginWindow"></div>
+<div ui-view class="view-container animate"></div>
+
+</body>
+
+</html>

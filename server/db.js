@@ -462,7 +462,7 @@ function findCats(reply, all, gid) {
 						A.push(c)
 					})
 					//log.dbg(A[0])
-					
+
 					reply(A)
 				})
 			}

@@ -1394,7 +1394,7 @@ article img {
 
 .graph { width: 900px; height:650px; display:inline-block; float:left}
 
-.container { overflow: hidden; margin: 20px; }
+.container { overflow: hidden;}
 
 .chart { float: left; width: 300px; height: 300px; margin: 0 20px 0 0;
 	-webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;
