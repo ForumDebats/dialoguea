@@ -37,6 +37,7 @@ export function isAdmin(user, yes, no) {
 		return no();
 	}
 	else {
+		log.debug('getting user')
 		getUser(user.uid,
 				u => u && u.level > 499 ?
 				yes(u) : no(e)
@@ -49,8 +50,8 @@ function UNAUTHORIZED(res){
 }
 
 
-export function getUser(bkuid, oknext, konext) {
-	var duid = kdecodeb64(bkuid).toString()
+export function getUser(duid, oknext, konext) {
+	//var duid = kdecodeb64(bkuid).toString()
 
 	DB.User.findOne({_id:duid},
 		(e,u)=> {

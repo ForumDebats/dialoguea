@@ -15,13 +15,13 @@ var DebatsCtrl = ['$http', '$stateParams', function ($http, $stateParams) {
 	D.message = ""
 	D.debats = []
 	D.catId = $stateParams.catId
-	console_dbg("debatsctrls", D.cat)
 
 	$http.get('api/grpcatdbts/' + D.catId)
 		.success(function (d) {
 			if (d.length) {
 				D.message = ""
 				D.debats = d
+				console.log(d)
 			}
 			else {
 				D.message = "Aucun débat ouvert"

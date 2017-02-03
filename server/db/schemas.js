@@ -107,18 +107,18 @@ var schema = {
 	Commentaire : new Schema({
 		parentId: {type: ObjectId, required: false},
 		prenom: OptionalString,
-		uid: {ref: 'User', type: ObjectId},
-		date: {type: Date},
+		uid: {ref: 'User', type: ObjectId, required: true},
+		date: {type: Date, required: true},
 		temp: {type: Boolean, required: false}, // ou req true et 'default':no
-		citation: {type: String},
-		reformulation: {type: String},
-		argumentation: {type: String},
-		avis: {type: Number, min: 0, max: 4}, //green:0,red:1,blue:2, hypos:3, rootCmt=4
-		selection: {type: Object},
+		citation: {type: String, required: true},
+		reformulation: {type: String, required: true},
+		argumentation: {type: String, required: true},
+		avis: {type: Number, min: 0, max: 4, required: true}, //green:0,red:1,blue:2, hypos:3, rootCmt=4
+		selection: {type: Object, required: false},
 		rootCmt: {ref: 'Commentaire', type: ObjectId, required: false},
 		// débat de référence, non requis pour les commentaires racines
 		debat: {ref: 'Debat', type: ObjectId, required: false}, // débat de référence
-		moderated: {type: Number, 'default': 0} // 1:hide, 2:flagged
+		moderated: {type: Number, 'default': 0, required: true} // 1:hide, 2:flagged
 	}).plugin(Tree, {
 			pathSeparator: '#',     // 'default' path separator
 			onDelete: 'REPARENT',   // Can be set to 'DELETE' or 'REPARENT'. 'default': 'REPARENT'
@@ -160,7 +160,6 @@ let default_required_collections = [
 	schema.Debat,
 	schema.Categorie,
 	schema.Document,
-	schema.Commentaire
 ];
 
 setFieldsRequiredByDefautlt(default_required_collections);

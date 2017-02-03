@@ -242,7 +242,7 @@ export class MongoRest {
 				if (err) {
 					return res.status(400).send({
 						success: false,
-						err: log.dbg(err) //util.inspect(err)
+						err: log.dbg('error in query',err) //util.inspect(err)
 					});
 				}
 				else if (doc === null) {
@@ -269,7 +269,7 @@ export class MongoRest {
 			}
 			if (req.doc.schema.methods.get) {
 				var add = req.doc.schema.methods.get(req.doc);
-				log.dbg(add)
+				//log.dbg(add)
 			}
 			return res.send(req.doc);
 		};

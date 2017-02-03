@@ -45,14 +45,14 @@ export function login(user, password, res, ok) {
 						'Un email vous a été envoyé sur votre messagerie lors de votre inscription.');
 				}
 
-				var uids=u._id.toString()
-				let uib=kencode(uids).toString('base64')
+				//var uids=u._id.toString()
+				//let uib=kencode(uids).toString('base64')
 
 				var profile = {
 					nom: u.nom,
 					prenom: u.prenom,
 					gids: u.gids, // must enforce access to /u/id
-					uid:  uib  // send a hash + housemade hash
+					uid:  u._id  // send a hash + housemade hash
 				}
 
 				var token = jwtoken.sign(profile, publicKey /*, {expiresInMinutes: 60 * 24 * 31}*/);

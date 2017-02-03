@@ -296,7 +296,7 @@ var DB = {
 
 
 	AllDebates : function (req, res) {
-	log.dbg('??,')
+
 		DB.Debat.find({})
 		.populate('rootCmt', {_id: 1, citation: 1, reformulation: 1, path: 1})
 		.populate('gids', {name: 1, _id: 1})

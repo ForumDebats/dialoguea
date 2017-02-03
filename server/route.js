@@ -88,10 +88,10 @@ module.exports = function (app) {
 
 	function restricted(req,res,next) {
 		try {
-			ACL.isAdmin(req.user, next, ()=>{ unauthorized(req, res)})
+			ACL.isAdmin(req.user, ()=>{ next()}, (e)=>{ log.error(e);unauthorized(req, res)})
 		}
 		catch(err) {
-			log.dbg(err)
+			log.dbg('ERROR:',err)
 			res.send('server error')
 		}
 	}
@@ -117,9 +117,9 @@ module.exports = function (app) {
 	adminPostOnly.forEach(function(url) {
 		app.post('/api/'+url, function (req, res, next) {
 			log.dbg("posting to",url)
-			isAdmin(req.user,
-				function(){ next() },
-				function(){log.dbg("restricted access")})
+			ACL.isAdmin(req.user,
+				next(),
+				()=>{log.dbg("restricted access")})
 		});
 	})
 
@@ -162,7 +162,7 @@ module.exports = function (app) {
 
 	// Mount all the resource on /api prefix
 	//var bridge = new MongoRest(app, {urlPrefix: '/api/', requestPrehandler: bridgeGuard, force: 'user'});
-	var bridge = new (require('./mongorest'))(app, { urlPrefix : '/api/'});
+	var bridge = new MongoRest (app, { urlPrefix : '/api/'});
 
 	// Expose the collections via REST
 	// TODO  : specific RULES
@@ -182,7 +182,7 @@ module.exports = function (app) {
 	)
 
 
-	function Route(method, route, func) {
+	function Route(method, route, func, fallback) {
 		app[method](
 			route,
 			(req,res)=>{
@@ -198,8 +198,46 @@ module.exports = function (app) {
 					)
 				}
 				else {
-					log.dbg('missing user or uid')
-					res.status(400).send('unauthorized')
+					if(fallback) {
+						fallback(req.body,null,
+								ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
+								ko => { log.dbg(ko); res.status(400).send(ko) }
+						)
+					}
+					else {
+						log.dbg('missing user or uid')
+						res.status(400).send('unauthorized')
+					}
+				}
+			})
+	}
+
+	function RouteAdm(method, route, func, fallback) {
+		app[method](
+			route,
+			(req,res)=>{
+				if(req.user && req.user.uid) {
+					ACL.isAdmin(
+						req.user.uid,
+							u => func(
+							req.body,
+							u._id,
+								ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
+								ko => { log.dbg(ko); res.status(400).send(ko) }
+						)
+					)
+				}
+				else {
+					if(fallback) {
+						fallback(req.body,null,
+								ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
+								ko => { log.dbg(ko); res.status(400).send(ko) }
+						)
+					}
+					else {
+						log.dbg('missing user or uid')
+						res.status(400).send('unauthorized')
+					}
 				}
 			})
 	}
@@ -216,21 +254,23 @@ module.exports = function (app) {
 		query: { _id:0 }
 	});
 
-	Route('get','/api/cdebats', DB.cDbts)
+	//app.get('/api/cdebats', DB.cDbts); // isolate one comment, or create a new debate around it
+
+	Route('get','/api/cdebats', DB.cDbts, DB.cDbts)
 
 	app.param('cmtId', DB.cmtTree);
 	app.param('catId', DB.catId);
 	app.get('/api/cmt/:cmtId', DB.cmtTree); // isolate one comment, or create a new debate around it
 	app.get('/api/1cmt/:cmtId', DB.cmtQuery);
 
-
-
 	//app.get('/api/cdebats', DB.cDbts);//with req.user.gid
 
 	app.get('/api/listedebats', DB.listeDebats);//with req.user.gid
-
 	app.get('/api/opendebats', DB.grpDbts);//with req.user.gid
 	app.get('/api/grpcatdbts/:catId', DB.grpCatDbts);//with req.user.gid
+
+	//RouteAdm('get','/apiadm/debats', DB.AllDebates)
+
 	app.get('/apiadm/debats', DB.AllDebates);//with req.user.gid
 
 	// nom prenom login password groupe

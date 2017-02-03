@@ -15,6 +15,7 @@
 import log from './log'
 import db from './db'
 
+
 var
 	io = require('socket.io'),
 	connectedUsers=0
@@ -57,7 +58,7 @@ exports.listen = function (server) {
             socket.join(data.room)
             db.User.findOne({_id:data.uid},{prenom:1}, function(e,u) {
                 if(u) {
-                    console.log(u)
+                    log.dbg(u)
                     socket.to(data.room).emit("entered",u.prenom)
                 }else{log.error("user",data.uid,"not found")}
             });
@@ -67,7 +68,7 @@ exports.listen = function (server) {
         socket.on('newcmt', function (data) {
             db.User.findOne({_id:data.uid},{prenom:1}, function(e,u) {
                 if(u) {
-                    console.log(u)
+                    log.dbg(u)
                     socket.to(data.room).emit("newcmt",data)
                 }else{log.error("user",data.uid,"not found")}
             });
