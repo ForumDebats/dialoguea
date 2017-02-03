@@ -216,14 +216,17 @@ var DB = {
 							{_id: Dx.rootCmt._id},
 							{_id: 1, citation: 1, reformulation: 1, path: 1},
 							(e, C) => {
-								function digAvis(c, length) {
+								function digAvis1(c, length) {
 									c.getChildrenTree(args, (e, Ch)=> {
 										var r = c.toObject()
 										var d = Dx.toObject()
 										var N = {n: 0, 0: 0, 1: 0, 2: 0, 3: 0}
 										CountAvis(N, Ch)
 										r.count = N
-										_.each(d, attrname=> r[attrname] = d[attrname] )
+										for (var attrname in d) {
+											r[attrname] = d[attrname];
+										}
+										//_.each(d, attrname=> r[attrname] = d[attrname] )
 										R.push(r)
 										if (++n == length) {
 											res.json(R);
@@ -232,7 +235,7 @@ var DB = {
 								}
 
 								//log.dbg(Dx)
-								digAvis(C, L)
+								digAvis1(C, L)
 							}
 						)
 					})
@@ -276,7 +279,9 @@ var DB = {
 											var N = {n: 0, 0: 0, 1: 0, 2: 0, 3:0}
 											CountAvis(N, Ch)
 											r.count = N
-											_.each(d, attrname=> r[attrname] = d[attrname] )
+											for (var attrname in d) {
+												r[attrname] = d[attrname];
+											}
 											R.push(r)
 											if (++n == length) {
 												res.json(R);
@@ -302,7 +307,6 @@ var DB = {
 		.populate('gids', {name: 1, _id: 1})
 		.populate('categorie',{_id:1,name:1})
 		.exec((err, D)=>{ // don't filter the groups
-
 			var L = D.length;
 			var n = 0;
 			var R = []
@@ -316,13 +320,16 @@ var DB = {
 						digAvis(C, L)
 
 						function digAvis(c, length) {
+
 							c.getChildrenTree(args, function (e, Ch) {
 								var r = c.toObject()
 								var d = Dx.toObject()
 								var N = {n: 0, 0: 0, 1: 0, 2: 0, 3:0}
 								CountAvis(N, Ch)
 								r.count = N
-								_.each(d, attrname=> r[attrname] = d[attrname] )
+								for (var attrname in d) {
+									r[attrname] = d[attrname];
+								}
 								R.push(r)
 								if (++n == length) {
 									res.json(R);
@@ -478,10 +485,10 @@ function digAvis(args, R, Dx, c, length, next) {
 			N = {n: 0, 0: 0, 1: 0, 2: 0, 3:0}
 		CountAvis(N, Ch)
 		r.count = N
-		_.each(d,attrname => {
+		for (var attrname in d) {
 			r[attrname] = d[attrname];
-		})
-
+		}
+		
 		R.push(r)
 		if (++n == length) {
 			next(R);

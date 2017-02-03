@@ -23,6 +23,7 @@ angular.module('admDebats', ['ngResource'])
 
 			$http.get('apiadm/debats')
 				.success(function (d) {
+					console.log(d)
 					if(d.length) {
 						D.message = ""
 						D.debats = d
