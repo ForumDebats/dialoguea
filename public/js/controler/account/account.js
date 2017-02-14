@@ -2,9 +2,9 @@
  * Dialoguea
  * account.js
  *
- * copyright 2015-2016 Intactile design, Forum des débats
+ * copyright 2015-2016 Forum des débats
  * author : Philippe Estival -- phil.estival @ free.fr
- * Released under the GPLv2 license
+ * Released under the AGPL license
  *
  * registering usera and password recovery
  */

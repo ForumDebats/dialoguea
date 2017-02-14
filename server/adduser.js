@@ -2,10 +2,10 @@
  * Dialoguea
  * userlisting.js
  *
- * copyright 2014-2016 Intactile design, Forum des débats
+ * copyright 2014-2016 Forum des débats
  *
  * author : Philippe Estival -- phil.estival @ free.fr
- * Dual licensed under the MIT and GPLv3 licenses.
+ * Dual licensed under the MIT and AGPL licenses.
  *
  *
  * add a new admin (level 600)

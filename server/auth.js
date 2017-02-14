@@ -2,9 +2,9 @@
  * Dialoguea
  * auth.js
  *
- * copyright 2014-2017 Intactile design, Forum des débats
+ * copyright 2014-2017 Forum des débats
  * author : Philippe Estival -- phil.estival @ free.fr
- * Dual licensed under the MIT and GPLv3 licenses.
+ * Dual licensed under the MIT and AGPL licenses.
  *
  *
  * TODO: next layer of authentication

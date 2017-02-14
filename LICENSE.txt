@@ -1,15 +1,13 @@
+
+
+
 Dual licensed under the MIT and GPLv3 licenses.
 
-Copyright (C) 2016 Philippe Estival, Forum des débats, Intactile Design
+Copyright (C) 2016 Philippe Estival, Forum des débats
 
-Dialoguea is free software, and you may use it under the terms of either the
-MIT or the GNU GPL licenses:
+https://www.gnu.org/licenses/agpl-3.0.txt
 
-## GNU GPLv3
-
-You can redistribute this program and/or modify it under the terms of the
-GNU General Public License as published by the Free Software Foundation,
-either version 3 of the License, or (at your option) any later version.
+Dialoguea is free software, and you may use it under the terms of the AGPL license 
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,8 +18,4 @@ You should have received a copy of the GNU General Public License
 along with this program. See LICENSE-GPL, or, if this file is missing,
 <http://www.gnu.org/licenses/>.
 
-## MIT
 
-You may use the software under the terms of the MIT license, which can be
-found in LICENSE-MIT, or, if this file is missing,
-<http://www.opensource.org/licenses/mit-license>.

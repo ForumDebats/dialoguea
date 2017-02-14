@@ -2,9 +2,9 @@
  * Dialoguea
  * debat.js
  *
- * copyright 2014-2017 Intactile design, Forum des débats
+ * copyright 2014-2017 Forum des débats
  * author : Philippe Estival -- phil.estival @ free.fr
- * Released under the GPLv2 license
+ * Released under the AGPL license
  *
  * Module central
  * Double page : text à gauche, débat à droite

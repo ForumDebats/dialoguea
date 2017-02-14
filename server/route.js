@@ -88,7 +88,7 @@ module.exports = function (app) {
 
 	function restricted(req,res,next) {
 		try {
-			ACL.isAdmin(req.user, ()=>{ next()}, (e)=>{ log.error(e);unauthorized(req, res)})
+			ACL.isAdmin(req.user, ()=>{ next()}, (e)=>{ log.erroràcat    (e);unauthorized(req, res)})
 		}
 		catch(err) {
 			log.dbg('ERROR:',err)

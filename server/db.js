@@ -2,9 +2,9 @@
  * Dialoguea
  * DB.js
  *
- * copyright 2014-2017 Intactile design, Forum des débats
+ * copyright 2014-2017 Forum des débats
  * author : Philippe Estival -- phil.estival @ free.fr
- * Dual licensed under the MIT and GPLv3 licenses.
+ * Dual licensed under the MIT and AGPL licenses.
  *
  *
  * Database queries façade
@@ -26,8 +26,6 @@ var
 	;
 
 mongoose.Promise = require('bluebird');
-
-require('./db/middleware')
 
 
 /* TODO
@@ -429,7 +427,7 @@ var DB = {
 
 module.exports = DB
 
-
+require('./db/middleware')
 
 function findCats(reply, all, gid) {
 
@@ -488,7 +486,7 @@ function digAvis(args, R, Dx, c, length, next) {
 		for (var attrname in d) {
 			r[attrname] = d[attrname];
 		}
-		
+
 		R.push(r)
 		if (++n == length) {
 			next(R);

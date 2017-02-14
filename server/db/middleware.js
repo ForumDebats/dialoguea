@@ -2,10 +2,10 @@
  * Dialoguea
  * userlisting.js
  *
- * copyright 2014-2016 Intactile design, Forum des débats
+ * copyright 2014-2016 Forum des débats
  *
  * author : Philippe Estival -- phil.estival @ free.fr
- * Dual licensed under the MIT and GPLv3 licenses.
+ * Dual licensed under the MIT and AGPL licenses.
  */
 
 
@@ -133,6 +133,7 @@ schema.Commentaire.methods.post = function (cmt,next) {
 					{lastpostDate:cmt.date},
 					{upsert: false},
 					(e,d) =>{
+						log.dbg(e,d)
 						log.dbg('new comment', d.posts)
 						//log.dbg("dbt updated", d, cmt.date)
 					})

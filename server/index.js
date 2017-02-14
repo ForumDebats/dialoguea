@@ -4,7 +4,7 @@
  *
  * copyright 2014-2017 Intactilespeakers design, Forum des débats
  * author : Philippe Estival -- phil.estival@free.fr
- * Released under the GPLv2 license
+ * Released under the AGLv2 license
  *
  * express server
  *
