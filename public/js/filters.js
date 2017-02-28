@@ -2,8 +2,8 @@
  * Dialoguea
  * filters.js
  *
- * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats and the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  */
@@ -50,8 +50,26 @@ var autolinker = new Autolinker({truncate:35} );
 // insère les balises de liens sur les commentaires
 function linkFilter(){
 	return function(input) {
-		return autolinker.link(input);
+		return autolinker.link(input, {replaceFn : customAutolinkRpl})
 	}
 }
 
 
+function customAutolinkRpl ( match ) {
+    switch( match.getType() ) {
+        case 'url' :
+            wikipedia = 'https://fr.wikipedia.org'
+			if( match.getUrl().indexOf( wikipedia ) === -1 ) {
+                // returns an `Autolinker.HtmlTag` instance, which provides mutator methods for easy changes
+                var tag = match.buildTag();
+                tag.setAttr( 'rel', 'nofollow' );
+                tag.addClass( 'external-link' );
+				return '<a href="https://fr.wikipedia.org/">'+ match.getUrl().slice(wikipedia.length) + '</a>';
+                //return tag;
+
+            } else {
+                return true;  // let Autolinker perform its normal anchor tag replacement
+            }
+    }
+
+}
