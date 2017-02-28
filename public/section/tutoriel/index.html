@@ -18,76 +18,129 @@
     });
 </script>
 
-<section class="accueil childrenSelectable center">
+<section class="childrenSelectable center">
 
-    <div class="space100"></div>
-    <h1 class="big grey center">
-        Lire les échanges,
-        s’impliquer et s’exprimer
-    </h1>
+    <nav class="nav-circlepop">
+                    <a id="previous" class="prev" href="#">
+                        <span class="icon-wrap"></span>
+                    </a>
+                    <a id="next" class="next" href="#">
+                        <span class="icon-wrap"></span>
+                    </a>
+                </nav>
 
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto1.png"/>
+    <ul id="slides">
+        <li class="slide showing">
+            <div class="space200"></div>
 
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto2.png"/>
+            <h1 class="big grey center">
+            Lire les échanges,
+            s’impliquer et s’exprimer
+             </h1>
 
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto3.png"/>
+         </li>
 
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto4.png"/>
 
-    <div class="space100"></div>
-    <div class="space100"></div>
+        <li class="slide"><img src="img/tutoriel/tuto1.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto2.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto3.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto4.png"/></li>
+        <li class="slide">
+            <div class="space200"></div>
+            <h1 class="big center fadin">
+                Lancer les débats, les gérer.
+            </h1></li>
 
-    <h1 class="big center fadin">
-        Lancer les débats, les gérer.
-    </h1>
+        <li class="slide"><img src="img/tutoriel/tuto5.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto6.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto7.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto8.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto9.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto10.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto11.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto12.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto13.png"/></li>
+        <li class="slide"><img src="img/tutoriel/tuto14.png"/></li>
+        <li class="slide">
+            <div class="space200"></div>
 
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto5.png"/>
+            <h1 class="big center marron">
+                Annotation collective, argumentation et e-débats
+            </h1>
+            <a href="http://forum-debats.fr"><img src="img/tutoriel/logo-forum-des-debats.jpg"/></a>
+            </ul>
+        </li>
 
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto6.png"/>
 
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto7.png"/>
-
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto8.png"/>
-
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto9.png"/>
-
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto10.png"/>
-
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto11.png"/>
-
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto12.png"/>
-
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto13.png"/>
-
-    <div class="space100"></div>
-    <img class="fadin" src="img/tutoriel/tuto14.png"/>
-
-    <div class="space100"></div>
-
-    <header class="site-header site-banner">
+    <!-- <header class="site-header site-banner">
         <div class="cf header-panel">
             <a ui-sref="accueil"><h1 class="site-banner-title">Dialoguea</h1></a>
         </div>
     </header>
-    <div class="space300"></div>
+    <div class="space300"></div> -->
 
-    <h1 class="big center marron">
-        Annotation collective, argumentation et e-débats
-    </h1>
-    <div class="space200"></div>
-    <a href="http://forum-debats.fr"><img src="img/tutoriel/logo-forum-des-debats.jpg"/></a>
+
 
 </section>
+<script>
+
+var slides = document.querySelectorAll('#slides .slide');
+var currentSlide = 0;
+var slideInterval = setInterval(nextSlide,20000);
+function nextSlide() {
+    slides[currentSlide].className = 'slide';
+    currentSlide = (currentSlide+1)%slides.length;
+    slides[currentSlide].className = 'slide showing';
+}
+
+var playing = true;
+//var pauseButton = document.getElementById('pause');
+
+function pauseSlideshow() {
+    //pauseButton.innerHTML = 'Play';
+    playing = false;
+    clearInterval(slideInterval);
+}
+
+function playSlideshow() {
+    //pauseButton.innerHTML = 'Pause';
+    playing = true;
+    slideInterval = setInterval(nextSlide,2000);
+}
+/*
+pauseButton.onclick = function() {
+    if(playing) {
+    pauseSlideshow();
+  } else {
+    playSlideshow();
+  }
+};*/
+
+function nextSlide() {
+    goToSlide(currentSlide+1);
+}
+
+function previousSlide() {
+    goToSlide(currentSlide-1);
+}
+
+function goToSlide(n) {
+    pauseSlideshow();
+    slides[currentSlide].className = 'slide';
+    currentSlide = (n+slides.length)%slides.length;
+    slides[currentSlide].className = 'slide showing';
+}
+
+var next = document.getElementById('next');
+var previous = document.getElementById('previous');
+
+next.onclick = function() {
+    pauseSlideshow();
+    nextSlide();
+};
+previous.onclick = function() {
+    pauseSlideshow();
+    previousSlide();
+};
+
+</script>
