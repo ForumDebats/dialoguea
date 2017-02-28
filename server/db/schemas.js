@@ -2,7 +2,7 @@
  * Dialoguea
  * schema.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -76,14 +76,15 @@ var schema = {
 		revisionOf: {type: ObjectId, required: false, ref: 'Document'}, //for future versioning
 		creation_date: {type: Date, required: false},
 		isPublic: {type: Boolean, 'default': true},
-		owner: {type: ObjectId, ref: 'User'}
+		//owner: {type: ObjectId, ref: 'User'}
 	}),
 
 	Categorie : new Schema({
 		img: OptionalString,
 		name: String,
 		nbDocs: {type: Number, 'default': 0, min: 0},
-		debats: [{ref: 'Debat', type: ObjectId, required: false}] // débat de référence
+		debats: [{ref: 'Debat', type: ObjectId, required: false}], // débat de référence
+		order: {type:Number, 'default':0, required:false}
 	}),
 
 	Debat : new Schema({
@@ -107,18 +108,18 @@ var schema = {
 	Commentaire : new Schema({
 		parentId: {type: ObjectId, required: false},
 		prenom: OptionalString,
-		uid: {ref: 'User', type: ObjectId, required: true},
-		date: {type: Date, required: true},
+		uid: {ref: 'User', type: ObjectId},
+		date: {type: Date},
 		temp: {type: Boolean, required: false}, // ou req true et 'default':no
-		citation: {type: String, required: true},
-		reformulation: {type: String, required: true},
-		argumentation: {type: String, required: true},
-		avis: {type: Number, min: 0, max: 4, required: true}, //green:0,red:1,blue:2, hypos:3, rootCmt=4
-		selection: {type: Object, required: false},
+		citation: {type: String},
+		reformulation: {type: String},
+		argumentation: {type: String},
+		avis: {type: Number, min: 0, max: 4}, //green:0,red:1,blue:2, hypos:3, rootCmt=4
+		selection: {type: Object},
 		rootCmt: {ref: 'Commentaire', type: ObjectId, required: false},
 		// débat de référence, non requis pour les commentaires racines
 		debat: {ref: 'Debat', type: ObjectId, required: false}, // débat de référence
-		moderated: {type: Number, 'default': 0, required: true} // 1:hide, 2:flagged
+		moderated: {type: Number, 'default': 0} // 1:hide, 2:flagged
 	}).plugin(Tree, {
 			pathSeparator: '#',     // 'default' path separator
 			onDelete: 'REPARENT',   // Can be set to 'DELETE' or 'REPARENT'. 'default': 'REPARENT'
@@ -166,7 +167,6 @@ setFieldsRequiredByDefautlt(default_required_collections);
 
 
 function setCreateOrUpdateDate(next) {
-	log.dbg('update middleware called')
 	if(this.isNew)
 		this.creation_date = Date.now()
 	else {
@@ -191,6 +191,5 @@ autodate_collections.forEach(function(schema) {
 })
 
 autodate_collections.forEach( c => c.pre('save', setCreateOrUpdateDate) )
-
 
 module.exports = schema
