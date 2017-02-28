@@ -2,103 +2,106 @@
  * Dialoguea
  * admin.js
  *
- * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats and the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  *
  * admin section routing
  */
 
+ /*
+ok
+var loadJS = function(url, implementationCode, location){
+    //url is URL of external file, implementationCode is the code
+    //to be called from the file, location is the location to
+    //insert the <script> element
+
+    var scriptTag = document.createElement('script');
+    scriptTag.src = url;
+
+    scriptTag.onload = implementationCode;
+    scriptTag.onreadystatechange = implementationCode;
+
+    location.appendChild(scriptTag);
+};
+loadJS('admindeps.js',null,document.body)
+*/
+
+
+var UserFactory = ['$resource', function ($resource) {
+	return $resource('apiadm/users/:id',
+		{id: '@_id'},
+		{
+			update: {method: 'PUT'},
+			query: {method: 'GET', params: {gid: '@groupId'}, isArray: true}
+		});
+}];
 
 var app = angular.module('adminDialoguea',
-		['login', 'users', 'groups', 'openDebat', 'admDebats',
-			'documents', 'admCategories', 'translation', 'upload']
-)
-		.factory('authInterceptor', AuthFactory)
-		.config(['$httpProvider', function ($httpProvider) {
-			$httpProvider.interceptors.push('authInterceptor');
-		}])
+	['ui.router', 'ngResource', 'ngAnimate','as.sortable','ui.tinymce','ngTouch'])
 
-		.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+	.factory('authInterceptor', AuthFactory)
+	.factory('Broadcast', BroadcastFactory)
 
-			$stateProvider
-				.state('opendebat', {
-					url: '/opendebat',
-					templateUrl: 'section/admin/opendebat.html',
-					controller: 'OpenDebatCtrl',
-					controllerAs: 'O'
-				})
-				.state('opendebat.groupList', {
-					templateUrl: 'section/admin/group-list.html',
-					controller: 'GroupsListCtrl',
-					controllerAs: 'G',
-					//template: "<group-list validation='yes' selection='O.selection'></group-list>",
-					data: {selector: true, section: 'opendebat.'}
-				})
-				.state('opendebat.group', {
-					url: '/groupe/:groupId',
-					templateUrl: 'section/admin/group.html',
-					controller: 'GroupCtrl',
-					controllerAs: 'g',
-					data: {section: 'opendebat.'}
-				})
-				.state('opendebat.categories', {
-					templateUrl: 'section/admin/categories.html',
-					controller: 'AdmCategoriesCtrl',
-					controllerAs: 'C',
-					data: {section: 'opendebat.'}
-				})
-				.state('opendebat.docList', {
-					url: '/documents/:catId',
-					templateUrl: 'section/admin/documents.html',
-					controller: 'DocListCtrl',
-					controllerAs: 'D',
-					data: {selector: true, section: 'opendebat.'}
-				})
-				.state('categories', {
-					url: '/categories',
-					templateUrl: 'section/admin/categories.html',
-					controller: 'AdmCategoriesCtrl',
-					controllerAs: 'C',
-					data: {section: ''}
-				})
-				.state('docList', {
-					url: '/documents/:catId',
-					templateUrl: 'section/admin/documents.html',
-					controller: 'DocListCtrl',
-					controllerAs: 'D',
-					data: {selector: false, section: ''}
-				})
-				.state('groupList', {
-					url: '/groupes',
-					templateUrl: 'section/admin/group-list.html',
-					controller: 'GroupsListCtrl',
-					controllerAs: 'G',
-					data: {selector: false, section: ''}
-				})
-				.state('group', {
-					url: '/groupe/:groupId',
-					templateUrl: 'section/admin/group.html',
-					controller: 'GroupCtrl',
-					controllerAs: 'g'
-				})
-				.state('documentDetail', {
-					url: '/doc/:docId',
-					templateUrl: 'section/admin/documents.html',
-					controller: 'DocsCtrl',
-					controllerAs: 'D'
-				})
-				.state('admDebats', {
-					url: '/admdebats',
-					templateUrl: 'section/admin/debat-list.html',
-					controller: 'AdmDebatsCtrl',
-					controllerAs: 'D'
-				})
-				.state('upload', {
-					url: '/upload',
-					templateUrl: 'section/admin/upload.html',
-					controller: 'FileUploadCtrl',
-					controllerAs: 'F'
-				})
-		}]);
+	.factory('User',UserFactory)
+	.factory('Cat', CatFactory)
+	.factory('Debat', DebatFactory)
+	.factory('Docu', DocuFactory)
+	.factory('Group',GroupFactory)
+	.factory('Cmt', CmtFactory)
+
+	.directive('clickOnce', ClickOnce)
+	.directive('userList',function() {
+		return{
+			restrict:'E',
+			templateUrl: 'section/admin/user-list.html',
+			controller: 'UsersCtrl',
+			controllerAs:'U'
+		}
+	})
+
+	// keyboard
+	.directive('ngEnter', ngEnter )
+	.directive('ngEscape', ngEscape )
+
+	.filter('usersearch', function (row) {
+		return !!((row.nom.indexOf($scope.query || '') !== -1
+			 || row.prenom.indexOf($scope.query || '') !== -1));
+	})
+	.directive('groupList',function() {
+		return{
+			restrict:'E',
+			templateUrl: 'section/admin/group-list.html',
+			controller: 'GroupsListCtrl',
+			controllerAs:'G',
+			scope: {
+				validation: '@validation',
+				selection: '='
+			}
+		}
+	})
+	/*.filter('search', function (row) {
+		return 0 //((row.dateFermeture < Date.now())) ;
+	})*/
+
+
+	.directive('errSrc',errSrc)
+	.directive('getImg',getImg)
+	.controller('AdmCategoriesCtrl',AdmCategoriesCtrl)
+	.controller('AdmDebatsCtrl', AdmDebatCtrl)
+	.controller('DocListCtrl',DocListCtrl)
+	/*.controller('DocsListCtrl',DocsListCtrl)
+	.controller('DocsCtrl',DocsCtrl)
+	.controller('DocEditCtrl',DocEditCtrl)*/
+	.controller('GroupsListCtrl',GroupsListCtrl)
+	.controller('GroupCtrl',GroupCtrl)
+	.controller('UsersCtrl',UsersCtrl)
+	.controller('OpenDebatCtrl',OpenDebatCtrl)
+	.controller('PreDebatCtrl',PreDebatCtrl)
+
+	.config(['$httpProvider', function ($httpProvider) {
+		$httpProvider.interceptors.push('authInterceptor');
+	}])
+
+	.config(ADMINROUTES);
