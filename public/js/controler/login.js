@@ -2,8 +2,8 @@
  * Dialoguea
  * login.js
  *
- * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats and the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
 
  * Login process
@@ -29,13 +29,12 @@
 
 function UserStorage(loginData, $window, $rootScope, $sce) {
 	// store user login parameters
-	console_dbg(Settings.storage )
 	var storage = Settings.storage == "SessionStorage" ? $window.sessionStorage : $window.localStorage;
 
 	storage.user = JSON.stringify(loginData)
 	$rootScope.user = JSON.parse(storage.user);
 	$rootScope.indicator = $sce.trustAsHtml(storage.user.indicator)
-	$rootScope.showLoginWindow = false;  // set it to true by default IN THE CONTROLLER INIT to force login on opening
+	$rootScope.showLoginWindow = Settings.default_login_policy;  // set it to true by default IN THE CONTROLLER INIT to force login on opening
 	$rootScope.loggedIn = false;
 }
 
@@ -58,8 +57,8 @@ angular.module('login', ['oc.lazyLoad'])
 		};
 	})
 
-	.controller('LoginCtrl', ['$rootScope', '$http', '$window', '$sce', '$translate', '$ocLazyLoad', '$scope', '$timeout', '$location',
-		function ($rootScope, $http, $window, $sce, $translate, $ocLazyLoad, $scope, $timeout, $location) {
+	.controller('LoginCtrl', ['$rootScope', '$http', '$window', '$sce', '$translate', '$ocLazyLoad', '$scope', '$timeout', '$location','$state',
+		function ($rootScope, $http, $window, $sce, $translate, $ocLazyLoad, $scope, $timeout, $location, $state) {
 
 			$rootScope.credits = true;
 			$rootScope.showLoginWindow = Settings.default_login_policy;// set it to true by default to force login on opening
@@ -115,6 +114,8 @@ angular.module('login', ['oc.lazyLoad'])
 						L.verify();
 						$rootScope.$broadcast("loggedin")
 						//$location.path("/");
+						//location.reload();
+						$state.go($state.current, {}, {reload: true});
 					})
 					.error(function (data, status, headers, config) {
 						// Erase the token if the user fails to log in
@@ -137,6 +138,8 @@ angular.module('login', ['oc.lazyLoad'])
 				L.panel = ''
 				L.message = '';
 				$location.path("/");
+				//$state.go($state.current, {}, {reload: true});
+
 				$rootScope.showLoginWindow = Settings.default_login_policy ; // TRUE if default is login policy // Settings.defaultLogin
 			};
 
