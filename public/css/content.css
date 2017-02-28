@@ -1,11 +1,9 @@
-
 @font-face {
     font-family: 'Fira Sans';
     font-style: normal;
     font-weight: 300;
     src: local('Fira Sans Light'),
-
-    url(fonts/FiraSans/FiraSans-Light.woff) format('woff');
+    url(fonts/FiraSans/FiraSans-Light.woff) format('woff'),
     url(fonts/FiraSans/FiraSans-Light2.ttf) format('truetype');/*ok*/
 }
 @font-face {
@@ -26,7 +24,7 @@
     url(fonts/FiraSans/FiraSans-Bold.ttf) format('truetype');
 }
 @font-face {
-    font-family: 'Fira San';
+    font-family: 'Fira Sans';
     font-style: italic;
     font-weight: 400;
     src: local('Fira Sans Italic'),
