@@ -3,7 +3,7 @@
  * messaing.js
  *
  * copyright 2015-2017 Forum Des Débats and the following authors
- * author : Philippe Estival -- phil.estival @ free.fr
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Dual licensed under the MIT and AGPL licenses.
  *
  *
