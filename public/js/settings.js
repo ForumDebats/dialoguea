@@ -5,6 +5,7 @@ ENABLE_DEBUG=false
 console_dbg=function(){}
 
 Settings = {
+	mode_public: false,
 	default_login_policy: false,
 	storage : "LocalStorage", /*"SessionStorage"*/
 	createAccountAllowed : true,
