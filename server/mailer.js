@@ -175,13 +175,13 @@ exports.invitationMail = function (id,prenom,auteur,titre) {
 exports.resetMdpMail = function (id) {
 	return {
 		html: mailHeader
-		+"<br/>Cliquez sur ce lien pour réinitialiser votre mot de passe" + title
-		+ "<a href='"+SERVER+"#/reinit-mdp/"+id+"'>"+SERVER+"#/reinit-mdp/id="+id+"</a>\
+		+"<br/>Cliquez sur ce lien pour réinitialiser votre mot de passe " + title
+		+"<br/><a href='"+SERVER+"#/reinit-mdp/"+id+"'>"+SERVER+"#/reinit-mdp/id="+id+"</a>\
         </td></tr></table></body></html>",
 
 		text: title
 		+ "\n------------ \n\n"
-		+ "Cliquez sur ce lien pour réinitialiser votre mot de passe" + title
+		+ "Cliquez sur ce lien pour réinitialiser votre mot de passe " + title
 		+"\n" + SERVER+"#/reinit-mdp?phase=3&id="+id+"\n"
 	}
 }
@@ -208,7 +208,7 @@ exports.RelanceDebatMail = function (debid,cmtid,who, citation, argument) {
 exports.sendPassToUser = function (user) {
 	return {
 		html: mailHeader
-           +"<br/>" + user.prenom+ ", votre inscription à <a href='"+site+"'>"+appli+"</a> est validée<br/>" 
+           +"<br/>" + user.prenom+ ", votre inscription à <a href='"+site+"'>"+appli+"</a> est validée<br/>"
            + " Votre identfiant : " + user.login + "<br/>"
            + " mot de passe : " + user.password + "<br/>"
            + mailFooterWithSite
