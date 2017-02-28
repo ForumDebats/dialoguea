@@ -2,8 +2,8 @@
  * Dialoguea
  * account.js
  *
- * copyright 2015-2016 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats, Intactile Design, the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  * registering usera and password recovery

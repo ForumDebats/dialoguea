@@ -7,6 +7,8 @@ var ActivationCtrl
 			.post('activer', {id: $stateParams.id})
 			.success(function (data) {
 				UserStorage(data, $window, $rootScope, $sce)
+				$rootScope.$broadcast("loggedin")
+				$rootScope.loggedIn = true;
 				$location.path("_/registered");
 			})
 			.error(function (data) {
