@@ -2,7 +2,7 @@
  * Dialoguea
  * acl.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -37,7 +37,6 @@ export function isAdmin(user, yes, no) {
 		return no();
 	}
 	else {
-		log.debug('getting user')
 		getUser(user.uid,
 				u => u && u.level > 499 ?
 				yes(u) : no(e)
@@ -50,10 +49,10 @@ function UNAUTHORIZED(res){
 }
 
 
-export function getUser(duid, oknext, konext) {
+export function getUser(uid, oknext, konext) {
 	//var duid = kdecodeb64(bkuid).toString()
 
-	DB.User.findOne({_id:duid},
+	DB.User.findOne({_id:uid},
 		(e,u)=> {
 			if (e) { log.error(e); konext(e) }
 			else { /*log.dbg(u);*/ oknext(u) }
