@@ -2,7 +2,7 @@
  * Dialoguea
  * utils.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -18,7 +18,6 @@ var urlValid = function (url) {
 
 exports.urlValid = urlValid
 exports.validUrlImg = function validUrlImg(url) {
-	log.dbg(typeof(url))
 	if (urlValid(url)
 			&& (url.indexOf('.png')!=-1
 			|| url.indexOf('.jpg')!=-1
@@ -31,8 +30,11 @@ exports.validUrlImg = function validUrlImg(url) {
 	}
 }
 
+let reEmailValidator = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 exports.validateEmail = function validateEmail(email) {
-	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	return re.test(email);
+	return reEmailValidator.test(email);
 }
+
+exports.reEmailValidator = reEmailValidator
 
