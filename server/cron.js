@@ -2,7 +2,7 @@
  * Dialoguea
  * cron.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -11,9 +11,10 @@
  *
  */
 
-var DB = require('./db')
+var DB = require('./db'),
+    log = require('./log')
 
 var CronJob = require('cron').CronJob;
-new CronJob('00 00 00 * * *', function () {
-	log.dbg('Updating debates schedule');
+new CronJob('00 00 05 * * *', function () {
+	log.dbg('Mise à jour des débats');
 }, null, true, 'Europe/Paris');
