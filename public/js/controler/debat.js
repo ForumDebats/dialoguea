@@ -2,8 +2,8 @@
  * Dialoguea
  * debat.js
  *
- * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats and the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  * Module central
@@ -11,6 +11,54 @@
  *
  * TODO :: handle multiple selections (shift)
  */
+
+
+ var Hypostases = [
+				['', 'classification', 'paradoxes', 'formalisme', 'aporie', 'approximation'],
+				['variance', '', 'indices', 'données', 'variable', 'phénomène'],
+				['mode', 'variation', '', 'croyances', 'dimension', 'évènement'],
+				['axiome', 'valeur', 'conjecture', '', 'structure', 'invariant'],
+				['hypothèse', 'définition', 'problème', 'théorie', '', 'méthode'],
+				['principe', 'paradigme', 'domaine', 'loi', 'objet', '']
+			]
+var HypostasesHelp = [
+				["",
+					"Les classifications sont le fait de distribuer en classes, en catégories.",
+					"Les paradoxes sont des propositions à la fois vraies et fausses.",
+					"Un formalisme est la considération de la forme d’un raisonnement.",
+					"Les apories sont des difficultés d’ordre rationnel apparemment sans issues.",
+					"Une approximatioest un calcul approché d’une grandeur réelle."
+				], [
+					"Une variance caractérise une dispersion d'une distribution ou d'un échantillon.", "",
+					"Un indice est un indicateur numérique ou littéral qui sert à distinguer ou classer.",
+					"Une donnée est ce qui est admis, donné, qui sert à découvrir ou raisonner.",
+					"Une variable est ce qui prend différentes valeurs et ce dont dépend l’état d’un système.",
+					"Les phénomènes se manifestent à la connaissance via les sens."
+				], [
+					"Les modes sont les manières d’être d’un système.",
+					"Les variations sont des changements d’un état dans un autre.", "",
+					"Les croyances sont des certitudes ou des convictions qui font croire une chose vraie, vraisemblable ou possible.",
+					"Les dimensions sont des grandeurs mesurables qui déterminent des positions.",
+					"Les événements sont ce qui arrive."
+				], [
+					"Les axiomes sont des propositions admises au départ d’une théorie.",
+					"Une valeur est une mesure d’une grandeur variable.",
+					"Les conjectures sont des opinions ou propositions non vérifiées", "",
+					"Les structures sont l’organisation des parties d’un système.",
+					"Les invariants sont des grandeurs, relations ou propriétés conservées lors d’une transformation"
+				], [
+					"Une hypothèse est une conjecture concernant l’explication ou la possibilité d’un événement.",
+					"Une définition est la détermination, la caractérisation du contenu d’un concept.",
+					"Un problème est une difficulté à résoudre",
+					"Une théorie est une construction intellectuelle explicative, hypothétique et synthétique.", "",
+					"Une méthode est une procédure qui indique ce que l’on doit faire ou comment le faire."
+				], [
+					"Les principes sont les causes ou les éléments constituants des définitions, axiomes et hypothèses.",
+					"Un paradigme est un modèle ou un exemple.",
+					"Un domaine est un champ discerné par des limites, bornes, confins, frontières, démarcation.",
+					"Les lois exprimentw des corrélations",
+					"Un objet est ce sur quoi porte le discours, la pensée, la connaissance.", ""
+				]]
 
 angular.module('debat', ['ngResource', 'ngTouch', 'pascalprecht.translate', 'ngMessages'])
 
@@ -158,52 +206,8 @@ angular.module('debat', ['ngResource', 'ngTouch', 'pascalprecht.translate', 'ngM
 			A.choosenHypostases = [] // 8 max
 			A.selectedHypostase = new Array(new Array(6))
 			// todo : translate
-			A.Hypostases = [
-				['', 'classification', 'paradoxes', 'formalisme', 'aporie', 'approximation'],
-				['variance', '', 'indices', 'données', 'variable', 'phénomène'],
-				['mode', 'variation', '', 'croyances', 'dimension', 'évènement'],
-				['axiome', 'valeur', 'conjecture', '', 'structure', 'invariant'],
-				['hypothèse', 'définition', 'problème', 'théorie', '', 'méthode'],
-				['principe', 'paradigme', 'domaine', 'loi', 'objet', '']
-			]
-			A.HypostasesHelp = [
-				["",
-					"Les classifications sont le fait de distribuer en classes, en catégories.",
-					"Les paradoxes sont des propositions à la fois vraies et fausses.",
-					"Un formalisme est la considération de la forme d’un raisonnement.",
-					"Les apories sont des difficultés d’ordre rationnel apparemment sans issues.",
-					"Une approximatioest un calcul approché d’une grandeur réelle."
-				], [
-					"Une variance caractérise une dispersion d'une distribution ou d'un échantillon.", "",
-					"Un indice est un indicateur numérique ou littéral qui sert à distinguer ou classer.",
-					"Une donnée est ce qui est admis, donné, qui sert à découvrir ou raisonner.",
-					"Une variable est ce qui prend différentes valeurs et ce dont dépend l’état d’un système.",
-					"Les phénomènes se manifestent à la connaissance via les sens."
-				], [
-					"Les modes sont les manières d’être d’un système.",
-					"Les variations sont des changements d’un état dans un autre.", "",
-					"Les croyances sont des certitudes ou des convictions qui font croire une chose vraie, vraisemblable ou possible.",
-					"Les dimensions sont des grandeurs mesurables qui déterminent des positions.",
-					"Les événements sont ce qui arrive."
-				], [
-					"Les axiomes sont des propositions admises au départ d’une théorie.",
-					"Une valeur est une mesure d’une grandeur variable.",
-					"Les conjectures sont des opinions ou propositions non vérifiées", "",
-					"Les structures sont l’organisation des parties d’un système.",
-					"Les invariants sont des grandeurs, relations ou propriétés conservées lors d’une transformation"
-				], [
-					"Une hypothèse est une conjecture concernant l’explication ou la possibilité d’un événement.",
-					"Une définition est la détermination, la caractérisation du contenu d’un concept.",
-					"Un problème est une difficulté à résoudre",
-					"Une théorie est une construction intellectuelle explicative, hypothétique et synthétique.", "",
-					"Une méthode est une procédure qui indique ce que l’on doit faire ou comment le faire."
-				], [
-					"Les principes sont les causes ou les éléments constituants des définitions, axiomes et hypothèses.",
-					"Un paradigme est un modèle ou un exemple.",
-					"Un domaine est un champ discerné par des limites, bornes, confins, frontières, démarcation.",
-					"Les lois exprimentw des corrélations",
-					"Un objet est ce sur quoi porte le discours, la pensée, la connaissance.", ""
-				]]
+			A.Hypostases = Hypostases
+			A.HypostasesHelp = HypostasesHelp
 
 			$scope.hypostaseColEnabled = function (i) {
 				return A.availColHypostases[i]
@@ -266,8 +270,7 @@ angular.module('debat', ['ngResource', 'ngTouch', 'pascalprecht.translate', 'ngM
 			// specific translate overwrite
 			var translateArguBtn = function () {
 				var argument_btn = $translate.instant('BUTTON_ARGUMENT');
-				var extra = $rootScope.user ? $rootScope.user.extra ? $rootScope.user.extra.hypostase : '' :''
-				console_dbg($rootScope.user)
+				var extra = $rootScope.user ? $rootScope.user.extra ? $rootScope.user.extra : '' :''
 
 				Annotator.prototype.html.adder =
 					"<div id='newCmtBtn'><div id='argumentBtn' class='button-content'>"
@@ -605,7 +608,7 @@ angular.module('debat', ['ngResource', 'ngTouch', 'pascalprecht.translate', 'ngM
 
 			this.callEditor = function (annotation) {
 
-				console_dbg("call editor", A.addmedia)
+				//console_dbg("call editor", A.addmedia)
 				$scope.processing = false
 
 				if (!$rootScope.loggedIn) { // logged in? otherwise show login window
@@ -627,7 +630,8 @@ angular.module('debat', ['ngResource', 'ngTouch', 'pascalprecht.translate', 'ngM
 						selection: annotation.ranges[0],
 						avis: null,
 						parentId: A.selectedItem._id,
-						debat: A.debat._id
+						debat: A.debat._id,
+						temp:true
 					}
 
 					A.status = A.ADDINGCMT
@@ -737,7 +741,7 @@ angular.module('debat', ['ngResource', 'ngTouch', 'pascalprecht.translate', 'ngM
 				}
 			}
 
-			$scope.closeNewCommentModal = A.closeNewCommentModal = function (form) {
+			A.closeNewCommentModal = $scope.closeNewCommentModal = function (form) {
 				form.$setPristine();
 				form.$setUntouched();
 				A.clearSelections()
