@@ -2,7 +2,7 @@
  * Dialoguea
  * userlisting.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -13,6 +13,8 @@
 
 var DB = require('../db')
 	, isAdmin = require('./acl').isAdmin
+	, log = require('../log')
+	, genpw = require('../genpasswd')
 
 // nom prenom login password groupe
 module.exports = function (req, res) {
@@ -34,7 +36,7 @@ module.exports = function (req, res) {
 						nom: u[0],
 						prenom: u[1],
 						login: u[2] ? u[2] : u[1][0] +'.'+[0],
-						password: u[3] || DB.genpw(8),
+						password: u[3] || genpw(8),
 						gid: gid, //gname actually. this is ovewritten by gid below
 						email: u[4]
 					})
@@ -56,11 +58,9 @@ module.exports = function (req, res) {
 				var existing = false
 				var checked = 0
 				for (var i = 0, _l = users.length; i < _l; i++) {
-					log.dbg("checking ",users[i].login)
 					DB.findUser({login: users[i].login}, function (u) {
 						checked++
 						if (u) {
-							log.dbg(u)
 							existing = true
 							already.push(u.login)
 						}
