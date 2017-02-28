@@ -2,7 +2,7 @@
  * Dialoguea
  * account.js
  *
- * copyright 2015-2017 Forum Des Débats, Intactile Design, the following authors
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
