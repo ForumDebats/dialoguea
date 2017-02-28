@@ -2,7 +2,7 @@
  * Dialoguea
  * mailer.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -13,7 +13,7 @@
 var   log       = require('./log')
 	, nodemailer = require('nodemailer')
 	, wellknown  = require('nodemailer-wellknown') // https://github.com/andris9/nodemailer-wellknown
-   , settings   = require('../settings').configuration
+   , settings   = require('../settings')
 	, config     = wellknown(settings.MAILER.provider)
 	, SERVER     = settings.PROTOCOL + settings.SERVER
 

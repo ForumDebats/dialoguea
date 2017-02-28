@@ -12,7 +12,7 @@
 
 
 import log from './log'
-import { configuration as settings } from '../settings'
+import settings from '../settings'
 import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
@@ -59,10 +59,12 @@ mongoose.connection.on('error',  e => log.error('Mongoose connection error',e))
 
 app.set('view engine', 'html')
 app.set('views', './views')
-app.set('view cache', false)
+app.set('view cache', true)
 
 server.listen(app.get('port'))
 //messaging.listen(server)
 log.info("http://"+settings.SERVER)
+
+
 
 

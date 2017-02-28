@@ -11,7 +11,8 @@
 
 import callsite from 'callsite'
 import winston from 'winston'
-import { configuration as settings } from '../settings'
+//import { configuration as settings } from '../settings'
+import settings from '../settings'
 import path from 'path'
 
 var shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
