@@ -2,7 +2,7 @@
  * Dialoguea
  * invitation.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -11,18 +11,18 @@
 
 var mailer = require('../mailer'),
 	DB = require('../db'),
-	settings = require('../../settings')
-
+	settings = require('../../settings'),
+	log = require('../log'),
+	utils = require('../utils')
 
 module.exports = function (req, res) {
-	log.dbg(req.user)
-	DB.findUserById(req.user.uid, function (u) {
+	DB.findUserById(req.user.uid, u =>{
 		if(u) {
 			log.dbg("invitation à ", req.body.inviteEmail, "de:", u.prenom, " debat:", req.body.auteur, req.body.titre)
 			if (utils.validateEmail(req.body.inviteEmail) && u.prenom && req.body.auteur && req.body.titre) {
 				var inviteMail = mailer.invitationMail(req.body.debat, u.prenom, req.body.auteur, req.body.titre)
 				var mail = mailer.INVITATION;
-				mail.from = settings.configuration.MAILER;
+				mail.from = settings.MAILER;
 				mail.to = req.body.inviteEmail;
 				mail.html = inviteMail.html;
 				mail.text = inviteMail.text;
