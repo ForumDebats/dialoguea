@@ -14,13 +14,13 @@
 
 var   mongoose = require('mongoose')
 	,	prompt = require('prompt')
-	,	settings = require('../settings').configuration
+	,	settings = require('../settings')
 	,	User = require("./db.js").User
 	,	Debat = require("./db.js").Debat
 	,	Categorie = require("./db.js").Categorie
 	,	_ = require("underscore")
 	,	log = require('./log')
-   , util = require('./utils')
+   , reEmailValidator = require('./utils').validateEmail
    , fs = require('fs')
    , genpwd = require('./genpasswd')
    , mailer = require('./mailer.js')
@@ -30,7 +30,7 @@ process.on('uncaughtException', function (err) {
 	process.exit(1)
 })
 
-mongoose.set('debug', settings.DEBUG);
+//mongoose.set('debug', settings.DEBUG);
 mongoose.connection.on('error', function () {
 	console.log('Mongoose connection error', arguments);
 });
@@ -46,7 +46,7 @@ var validator = {
 }
 // dup with utils.js
 var emailvalidator = {
-   validator:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+   validator:reEmailValidator,
    warning: 'not a valid email'
 }
 
@@ -93,7 +93,7 @@ var userlist = [
 }]
 
 
-var start = function () {
+let start = function () {
 
 	prompt.start();
 
