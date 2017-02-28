@@ -2,7 +2,7 @@
  * Dialoguea
  * messaing.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -14,7 +14,6 @@
 
 import log from './log'
 import db from './db'
-
 
 var
 	io = require('socket.io'),
@@ -58,7 +57,7 @@ exports.listen = function (server) {
             socket.join(data.room)
             db.User.findOne({_id:data.uid},{prenom:1}, function(e,u) {
                 if(u) {
-                    log.dbg(u)
+                    console.log(u)
                     socket.to(data.room).emit("entered",u.prenom)
                 }else{log.error("user",data.uid,"not found")}
             });
@@ -68,7 +67,7 @@ exports.listen = function (server) {
         socket.on('newcmt', function (data) {
             db.User.findOne({_id:data.uid},{prenom:1}, function(e,u) {
                 if(u) {
-                    log.dbg(u)
+                    console.log(u)
                     socket.to(data.room).emit("newcmt",data)
                 }else{log.error("user",data.uid,"not found")}
             });
