@@ -2,8 +2,8 @@
  * Dialoguea
  * debats.js
  *
- * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats and the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  * debats disponibes pour un groupe
@@ -21,7 +21,6 @@ var DebatsCtrl = ['$http', '$stateParams', function ($http, $stateParams) {
 			if (d.length) {
 				D.message = ""
 				D.debats = d
-				console.log(d)
 			}
 			else {
 				D.message = "Aucun débat ouvert"
