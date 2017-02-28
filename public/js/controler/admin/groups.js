@@ -2,30 +2,16 @@
  * Dialoguea
  * groups.js
  *
- * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats and the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  * Admin : gestion des groupes
  */
 
 
-angular.module('groups', ['ngResource'])
-.factory('Group',GroupFactory)
-.directive('groupList',function() {
-	return{
-		restrict:'E',
-		templateUrl: 'section/admin/group-list.html',
-		controller: 'GroupsListCtrl',
-		controllerAs:'G',
-		scope: {
-			validation: '@validation',
-			selection: '='
-		}
-	}
-})
-.controller('GroupsListCtrl',
-		['Group','$scope','$location','$rootScope','$state',
+var GroupsListCtrl =
+['Group','$scope','$location','$rootScope','$state',
 function(Group, $scope, $location,$rootScope,$state)
 {
 	var G = this;
@@ -105,7 +91,7 @@ function(Group, $scope, $location,$rootScope,$state)
 		console_dbg($rootScope.GrpSelection[gid])
 		return $rootScope.GrpSelection[gid]
 	}
-}])
+}]
 
 	/*
 	 * keys : une liste d'id
@@ -130,7 +116,7 @@ function(Group, $scope, $location,$rootScope,$state)
 	})*/
 
 /** acces au groupe. todo : replacer le bouton de suppression */
-.controller('GroupCtrl',['Group', '$state','$stateParams', '$filter', '$location',
+var GroupCtrl = ['Group', '$state','$stateParams', '$filter', '$location',
 function(Group, $state, $stateParams, $filter, $location) {
 
 	var G = this;
@@ -151,4 +137,4 @@ function(Group, $state, $stateParams, $filter, $location) {
 		this.group.$delete();
 		$location.path('/groupes')
 	}
-}]);
+}]
