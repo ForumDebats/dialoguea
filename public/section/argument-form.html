@@ -1,16 +1,17 @@
 <div class="dialoguea-modal-new-argumentation selectable" ng-hide="loading" style="top:0px;left:{{ A.windowWidth/2 - 805/2 }}px ; position:absolute">
 	<div class="dialoguea-modal-content" >
 		<form name="newArgumentationForm" novalidate>
-			<div class="dialoguea-modal-header dotted" onMouseDown="drag(this.parentNode.parentNode.parentNode, event);">Mon Argumentation</div>
+			<div class="dialoguea-modal-header dotted"
+				onMouseDown="drag(this.parentNode.parentNode.parentNode, event);">Mon Argumentation</div>
 			<div class="dialoguea-modal-body">
 				<div class="argumentation-card-citation">{{ A.newcmt.citation | cut:true:650}}</div>
 
 				<div class="form-group">
-					<label for="reformulation" class="is-required">
-						Reformuler <span title="Champ requis" class="is-required-symbol">*</span>
-                        <span class="label-alert"
-                              ng-if="newArgumentationForm.reformulation.$touched && newArgumentationForm.reformulation.$error.required">
-                            Vous devez remplir ce champ</span>
+					<label for="reformulation"
+						class="is-required">
+						Reformuler
+						<span title="Champ requis" class="is-required-symbol">*</span>
+
 					</label>
                     <textarea class="form-control textselectable verticalresize" rows="5" ng-model="A.newcmt.reformulation"
                               name="reformulation" id="reformulation" required autofocus></textarea>
@@ -19,9 +20,7 @@
 				<div class="form-group">
 					<label class="is-required">
 						Avis <span title="Champ requis" class="is-required-symbol">*</span>
-						<span class="label-alert"
-						      ng-if="newArgumentationForm.reformulation.$touched && newArgumentationForm.argumentation.$touched && newArgumentationForm.avis.$error.required">
-							Vous devez choisir un avis</span>
+
 					</label>
 
 					<div class="noselect vote cf">
@@ -49,16 +48,14 @@
 				<div class="form-group">
 					<label for="argumentation" class="is-required">
 						Argumenter <span title="Champ requis" class="is-required-symbol">*</span>
-						<span class="label-alert"
-						      ng-if="newArgumentationForm.argumentation.$touched && newArgumentationForm.argumentation.$error.required">
-							Vous devez remplir ce champ</span>
+
 					</label>
 					<textarea class="form-control textselectable verticalresize" rows="5" ng-model="A.newcmt.argumentation" name="argumentation"
 					          id="argumentation" required></textarea>
 
 				</div>
 
-				<button ng-show="A.addmedia==false" class="button btn ok" onmouseup="A.addmedia=true"> Ajouter un media</button>
+				<!-- <button ng-show="A.addmedia==false" class="button btn ok" onmouseup="A.addmedia=true"> Ajouter un media</button>
 				<div ng-show="A.addmedia">
 					<div class="tab-header">
 						<ul>
@@ -71,11 +68,11 @@
 					<div class="tab-content">
 						<div ng-include="currentTab"></div>
 					</div>
-				</div>
+				</div> -->
 
 			</div>
 			<div class="dialoguea-modal-footer">
-				<button class="button btn cancel" onmouseup="A.closeNewCommentModal(newArgumentationForm)"> Annuler
+				<button class="button btn cancel" ng-mouseup="closeNewCommentModal(newArgumentationForm)"> Annuler
 				</button>
 				<button class="button btn ok" name='EnvoiCmt'
 				        ng-disabled="newArgumentationForm.$invalid || A.processing || A.newcmt.timeout"
