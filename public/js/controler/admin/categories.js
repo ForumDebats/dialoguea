@@ -3,13 +3,13 @@
  * category.js
  *
  * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  * category management
  */
 
-
+/*
 function urlValid(url) {
 	var re=/^^http(s)?:\/\/([a-zA-Z0-9-]+\.)?([a-zA-Z0-9-]+\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,4})?(:[0-9]+)?(\/[\w]*)*(\/[\w-]+\.[a-zA-Z]{1,4})?$/
            // https://   subsubdom.        subdom.         dialoguea     .fr            :3000  / w / w / file.png
@@ -22,54 +22,9 @@ function validUrlImg(url) {
 	|| url.endsWith('.jpg')
 	|| url.endsWith('.gif')
 	|| url.endsWith('.svg')))
-}
+}*/
 
-angular.module('admCategories', ['ngResource'])
-.factory('Broadcast', BroadcastFactory)
-.factory('Cat', CatFactory)
-.config(['$httpProvider',function ($httpProvider) {
-	$httpProvider.interceptors.push('authInterceptor');
-}])
-
-.directive('getimg', ['$http', function($http) {
-	return {
-		restrict:'A',
-		require: 'ngModel',
-		link : function(scope, element, attrs, ngModel) {
-			ngModel.$parsers.push(function(value) {
-				if(!value || !urlValid(value)) return;
-
-				if(!value.startsWith('http://')) {
-					value ='http://' + value;
-				}
-				$http.get(value).
-					success(function (c,s) {
-						scope.message = "ok"+s
-					}).
-					error(function (d,e) {
-						scope.message = "err"+d
-					})
-				return value;
-			});
-		}
-	}
-}])
-
-.directive('errSrc', function() {
-	return {
-		link: function(scope, element, attrs, ngModel) {
-
-			element.bind('error', function() {
-				if (attrs.src != attrs.errSrc) {
-					attrs.$set('src', attrs.errSrc);
-					scope.noImgUrl=true
-				}
-			});
-		}
-	}
-})
-
-.controller('AdmCategoriesCtrl', ['Cat','Broadcast','$http','$scope','$timeout','$filter', '$state',
+var AdmCategoriesCtrl = ['Cat','Broadcast','$http','$scope','$timeout','$filter', '$state',
 function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 
 	var C = this;
@@ -100,7 +55,7 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 	}
 
 	this.saveCat = function() {
-		$scope.processing=true
+		$scope.processing=false
 		var id = C.cat.indexOf(C.originalCat)
 		var thisCat = C.cat[id]
 		thisCat.name = C.newcat.name;
@@ -109,6 +64,7 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 	}
 
 	$scope.cancelEdit = function() {
+		$scope.proccesing = false;
 		C.status = C.LISTING;
 		C.newcat = { name: null, img: null, upload: false, byUrlImg: null, debats:[]}
 	}
@@ -133,7 +89,7 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 			})*/
 
 			var orderBy = $filter('orderBy');
-			C.cat = orderBy(C.cat, 'name', false)
+			C.cat = orderBy(C.cat, 'order', false)
 		}
 		$('.loading').hide()
 	});
@@ -144,7 +100,7 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 	}
 
 	this.deleteCat = function(c) {
-		$scope.processing=true
+		$scope.processing=false
 		var id = C.cat.indexOf(c)
 		C.cat[id].$remove()
 		C.cat.splice(id,1)
@@ -152,7 +108,7 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 	}
 
 	this.addCat = function() {
-		$scope.processing=true
+		$scope.processing=false
 		var newcat;
 		if($scope.noImgUrl) C.newcat.imgurl=null;
 
@@ -220,6 +176,7 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 	};
 
 	this.save = function(thisCat) {
+		$scope.processing=false
 		var name = thisCat.name.trim();
 		if (name.length) {
 			//console_dbg(thisUser)
@@ -253,11 +210,11 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 	});
 
 	$scope.tabs = [
-		{ title: "Télécharger d'une URL" , url: 'byURL.tpl.html' },
-		{ title: "Envoyer une image", url: 'upFILE.tpl.html' }
+		{ title: "Envoyer une image", url: 'upFILE.tpl.html' },
+		{ title: "Télécharger d'une URL" , url: 'byURL.tpl.html' }
 	];
 
-	$scope.currentTab = 'byURL.tpl.html';
+	$scope.currentTab = 'upFILE.tpl.html';
 
 	$scope.onClickTab = function (tab) {
 		$scope.currentTab = tab.url;
@@ -267,4 +224,21 @@ function(Cat,Broadcast,$http,$scope,$timeout,$filter,$state) {
 		return tabUrl == $scope.currentTab;
 	}
 
-}])
+
+	$scope.dragControlListeners = {
+	    //accept: function (sourceItemHandleScope, destSortableScope) {return boolean},//override to determine drag is allowed or not. default is true.
+	    //itemMoved: function (event) { console.log(event, event.dest)},
+	    orderChanged: function(event) {
+		    C.cat.forEach(function(item,i){
+		    	item.order = i
+		    	item.$update()
+	        })
+	    },
+	    containerPositioning: 'relative',
+	    //containment: '#catslist',//optional param.
+	    //placeholder: 'catsedit',//optional param.
+	    //clone: false, //optional param for clone feature.
+	    //allowDuplicates: false //optional param allows duplicates to be dropped.
+	};
+
+}]
