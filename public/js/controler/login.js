@@ -88,8 +88,7 @@ angular.module('login', ['oc.lazyLoad'])
 					.error(function () {
 						delete storage.user;
 						$rootScope.loggedIn = false;
-						// ! mode public
-						$rootScope.showLoginWindow = true;
+						$rootScope.showLoginWindow = !Settings.mode_public;
 						$rootScope.user = null;
 					})
 					.finally(function () {
