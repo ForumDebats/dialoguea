@@ -4,8 +4,8 @@
  *
  * copyright 2014-2016 Forum des débats
  *
- * author : Philippe Estival -- phil.estival @ free.fr
- * Dual licensed under the MIT and AGPL licenses.
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
+ * Released under the AGPL license
  */
 
 

@@ -1,9 +1,9 @@
 
 
 
-import {configuration as config} from '../settings.js'
+import settings from '../settings.js'
 
-const KEY = hex(config.UIDKEY)
+const KEY = hex(settings.UIDKEY)
 
 /* cyclic xor
 * python equivalent to  ''.join(chr(ord(c1) ^ ord(c2)) for c1, c2 in zip((h1), cycle(h2)))
@@ -76,16 +76,16 @@ let key='hi there'
  let str="5785eb0026a4a0ea5a21fbb6"
  let xs=xencode(str,hk)
  let dxs=xdecode(xs,hk)
- console.log(dxs)
+ log.dbg(dxs)
 
 str="5785eb0026a4a0ea5a21fbb6"
 let bxs=kencode(str).toString('base64')
-console.log(">>",bxs)
+log.dbg(">>",bxs)
 let abs=new Buffer(bxs, 'base64').toString();
 dxs=kdecode(abs)
-console.log("//",dxs.toString())
-console.log(dxs.toString())
+log.dbg("//",dxs.toString())
+log.dbg(dxs.toString())
 let bs = "BlMFDwQBBAUAUwEBBAQFAQQGBQ8BAgZSBQMAAAUEBQYGUzYxMzIzMTY2NjI2MjM2"
 dxs=kdecodeb64(bs)
-console.log("++",dxs.toString())
+log.dbg("++",dxs.toString())
 	*/

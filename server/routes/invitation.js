@@ -4,7 +4,7 @@
  *
  * copyright 2015-2017 Forum Des Débats and the following authors
  * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
- * Dual licensed under the MIT and AGPL licenses.
+ * Released under the AGPL license
  *
  * invitation/mailer
  */
