@@ -2,8 +2,8 @@
  * Dialoguea
  * upload.js
  *
- * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * copyright 2015-2017 Forum Des Débats and the following authors
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  * upload
@@ -12,7 +12,9 @@
 
 angular.module('upload', [], function(){})
 .factory('Broadcast',BroadcastFactory)
-.controller('FileUploadCtrl', ['$scope','Broadcast','$translate','$filter',function($scope,Broadcast,$translate, $filter)
+.controller('FileUploadCtrl',
+            ['$rootScope','$scope','Broadcast','$translate','$filter',
+            function($rootScope,$scope,Broadcast,$translate, $filter)
 {
 
 	// drag and drop location
