@@ -46,7 +46,7 @@ export class MongoRest {
 			model: model,
 			//options : options || null
 			options: Object.assign({
-				requestPrehandler: function (req, res, next) {
+				requestPrehandler: (req, res, next) => {
 					next();
 				}
 			}, options || {})
@@ -56,7 +56,7 @@ export class MongoRest {
 	}
 
 	getResource(name) {
-		return this.resources.find(function (resource) {
+		return this.resources.find( (resource) => {
 			return resource.resource_name === name;
 		})
 	}
@@ -197,7 +197,10 @@ export class MongoRest {
 	epureRequest(req, resource) {
 		var req_data = req.body;
 
-		if (resource.options === null || (typeof resource.options.hide == 'undefined' && typeof resource.options.readOnly == 'undefined' && typeof resource.options.force == 'undefined'))
+		if (resource.options === null
+		    || (typeof resource.options.hide == 'undefined'
+		        && typeof resource.options.readOnly == 'undefined'
+		        && typeof resource.options.force == 'undefined'))
 			return req_data;
 
 		for (var key in resource.options.force) {
@@ -230,7 +233,7 @@ export class MongoRest {
 			var hidden_fields = this.generateHiddenFields(req.resource);
 
 			//
-			// select({_id : false}) invert the select process (hidde the _id field)
+			// select({_id : false}) invert the select process (hide the _id field)
 			//
 			var query = req.resource.model.findOne({_id: req.params.id}).select(hidden_fields);
 
@@ -242,7 +245,7 @@ export class MongoRest {
 				if (err) {
 					return res.status(400).send({
 						success: false,
-						err: log.dbg('error in query',err) //util.inspect(err)
+						err: log.dbg(err) //util.inspect(err)
 					});
 				}
 				else if (doc === null) {
@@ -269,7 +272,6 @@ export class MongoRest {
 			}
 			if (req.doc.schema.methods.get) {
 				var add = req.doc.schema.methods.get(req.doc);
-				//log.dbg(add)
 			}
 			return res.send(req.doc);
 		};
