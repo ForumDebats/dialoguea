@@ -1,0 +1,33 @@
+<div ng-if="message" class="alert alert-warning">{{message}}</div>
+<div class="dialoguea-modal-login">
+    <div class="dialoguea-modal-content" style="top:-100px">
+        <div class="dialoguea-modal-header">Réinitialisation du mot de passe</div>
+        <form name="loginForm" ng-submit="submitRequest()">
+            <div class="dialoguea-modal-body">
+                <div class="form-group">
+                    <label for="email">Entrez votre email</label>
+                    <input class="form-control" ng-model="user.email" type="text" name="email" id="email" required
+                           email-validator ng-change="changed=true">
+
+                    <div class="error-messages" ng-if="interacted(loginForm.email)"
+                         ng-messages="loginForm.email.$error"><div ng-messages-include="form-messages"></div>
+                    </div>
+                </div>
+                <div class="dialoguea-modal-footer">
+                    <input type="submit" class="button btn" value="Envoyer"
+                           ng-disabled="!user.email || !loginForm.$valid
+                           || (loginForm.$submitted && !changed)">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/ng-template" id="form-messages">
+    <div ng-message="required">Ce champs est obligatoire</div>
+    <div ng-message="minlength">La valeur de ce champs est trop courte</div>
+    <div ng-message="maxlength">The value for this field is too long</div>
+    <div ng-message="email">Cette addresse email n'est pas valide</div>
+    <div ng-message="email-valid">Cette addresse email n'est pas valide</div>
+    <div ng-message="pattern">You did not enter the value in the correct format</div>
+</script>

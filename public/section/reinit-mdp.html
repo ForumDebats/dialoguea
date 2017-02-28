@@ -1,0 +1,33 @@
+
+<div class="dialoguea-modal-login">
+    <div class="dialoguea-modal-content" style="top:-100px">
+        <div class="dialoguea-modal-header">Réinitialisation du mot de passe</div>
+        <form name="loginForm" ng-submit="submit()">
+            <div class="dialoguea-modal-body">
+                <div class="form-group">
+                    <label for="pass">Nouveau mot de passe (minimum : 8 caractères)</label>
+
+                    <div class="error-messages-next-to" ng-messages="registerForm.pass.$error">
+	                    <div ng-messages-include="form-messages-pw"></div>
+                    </div>
+                    <input class="form-control" placeholder=""
+                           ng-model="user.password" type="password" name="pass" id="pass" minlength="8">
+                    <ul id="strength" check-strength="user.password"></ul>
+                </div>
+                <div ng-if="message" class="alert alert-warning">{{message}}</div>
+                <div class="dialoguea-modal-footer">
+                    <input type="submit" class="button btn" value="Envoyer" ng-disabled="!user.password">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/ng-template" id="form-messages-pw">
+    <div ng-message="required">Ce champs est obligatoire</div>
+    <div ng-message="minlength">Le mot de passe doit comporter au moins 8 charactères</div>
+    <div ng-message="password-characters">
+        Votre mot de passe doit consister en caractère alphabétiques ou numériques.
+        Il doit aussi contenir au moins un caractère spécial, un chiffre et une lettre majuscule.
+    </div>
+</script>
