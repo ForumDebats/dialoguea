@@ -8,14 +8,13 @@
 	<link href="css/dialog-v4.css" rel="stylesheet" type="text/css">
 	<script>
 		$(function () {
-
 			$('#form_upload').submit(function () {
 				$('#spinner').visible = true;
 				var xProgressID = guidGenerator();
 				$(this).attr('action', '/updbtimg?X-Progress-ID=' + xProgressID);
 				var uploadIntervalID = setInterval(function () {
 					$.get('/progressDbtImg?X-Progress-ID=' + xProgressID, function (data) {
-						if (data.status === 'done') {
+						if (data.status == "finished") {
 							clearInterval(uploadIntervalID);
 							console_dbg(data)
 							//$("#image").attr("src","/uploads/"+data.fileName)
@@ -36,7 +35,6 @@
 			});
 
 			function updateViewUploadStatus(data) {
-				console_dbg(data)
 			}
 
 			// http://stackoverflow.com/a/105074/464685
@@ -53,7 +51,7 @@
 <body>
 
 
-<form action="/upload?X-Progress-ID=1" enctype="multipart/form-data"
+<form enctype="multipart/form-data"
       method="post" id="form_upload" target="iframe_upload" style="margin:auto">
 
 	Sélectionner le fichier à partir de votre disque :
