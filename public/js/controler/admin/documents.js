@@ -3,18 +3,15 @@
  * documents.js
  *
  * copyright 2014-2017 Forum des débats
- * author : Philippe Estival -- phil.estival @ free.fr
+ * authors : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
  * Released under the AGPL license
  *
  * documents management
  */
 
 
-angular.module('documents', ['ngResource','ui.tinymce'])
-.factory('Docu', DocuFactory)
-.factory('Cat', CatFactory)
-.controller('DocListCtrl',
-		['Docu','Cat','$scope','$location','$rootScope','$stateParams','$state',
+var DocListCtrl =
+['Docu','Cat','$scope','$location','$rootScope','$stateParams','$state',
 function(Docu, Cat, $scope, $location, $rootScope, $stateParams, $state)
 {
 	var D = this;
@@ -175,7 +172,7 @@ function(Docu, Cat, $scope, $location, $rootScope, $stateParams, $state)
 		statusbar: false,
 		autoresize: false,
 		entity_encoding: "raw",
-		language_url: 'js/lang/fr_FR.js',
+		language_url: 'lang/fr_FR.js',
 		skin: 'tinycystom',
 		skin_url: '/css',
 		resize: true,
@@ -192,56 +189,6 @@ function(Docu, Cat, $scope, $location, $rootScope, $stateParams, $state)
 			D.editor = ed
 		}
 	};
-}])
+}]
 
 
-.directive( "autoResize",  function ($window ) {
-    function compile(tElement, tAttributes) {
-
-        function resize(element) {
-            if (element)
-                setTimeout(function () {
-                    var mce, toolbar,editArea;
-                    mce = element[0].previousSibling;
-                    if(mce.firstChild==null) return
-                    toolbar = mce.firstChild.firstChild;
-                    editArea =  toolbar.nextSibling;
-
-                    var max = $(mce).parent().outerHeight();
-                    max -= $(toolbar).outerHeight();// toolbar (add menubar if required)
-                    max -= 12;// 1px spacing
-
-                    $(editArea).animate({height:max},250);// Set the new height*/
-
-                    /* todo : autofit window
-                     var max = $('.mce-tinymce')
-                     .parent().outerHeight();
-                     max -= $('.mce-menubar.mce-toolbar').outerHeight();// Menubar
-                     max -= $('.mce-toolbar-grp').outerHeight();// Toolbar
-                     max -= 1;// 1px spacing
-                     $('.mce-edit-area').height(max);// Set the new height
-                     */
-                }, 200);
-        }
-
-
-        //var expression = tAttributes.afterDom;
-        var scope = tElement.scope()
-        $($window).on('resize', function () {
-            resize(tElement);
-        });
-
-
-        scope.$watch(
-            function () {
-                //TODO :scope.$eval(expression)
-                 resize(tElement)
-            }
-        );
-    }
-    return ({
-        compile: compile,
-        priority: -1,
-        restrict: "A"
-    });
-});
