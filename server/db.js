@@ -2,7 +2,7 @@
  * Dialoguea
  * DB.js
  *
- * copyright 2014-2017 Forum des débats
+ * copyright 2015-2017 Forum Des Débats and the following authors
  * author : Philippe Estival -- phil.estival @ free.fr
  * Dual licensed under the MIT and AGPL licenses.
  *
@@ -14,7 +14,7 @@
 import utils from './utils'
 import dl from './dl'
 import log from './log'
-import { configuration as settings } from '../settings'
+import settings from '../settings'
 import schema from './db/schemas'
 
 var
@@ -26,6 +26,188 @@ var
 	;
 
 mongoose.Promise = require('bluebird');
+
+//require('./db/middleware')
+
+
+//// USER methods
+
+schema.User.methods.post = function (entity) {
+	log.dbg("user post")
+	entity.password = require('./genpasswd')(9)
+};
+
+schema.User.pre('save', function (next) {
+	//log.dbg("user pre saved")
+	var user = this;
+	if (this.isNew)
+		this.creation_date = Date.now()
+	else
+		this.last_login = Date.now()
+	if (this.isModified('password') || this.isNew) {
+		var salt = bcrypt.genSaltSync(4);
+		user.hash = bcrypt.hashSync(user.password, salt);
+	}
+	this.wasNew = this.isNew;
+	next();
+})
+
+schema.User.post('save', function () {
+	//log.dbg('user saved')
+})
+
+
+//// GROUP methods
+/*
+schema.Group.methods.delete = function (g) { // delete all users in the group
+	log.dbg("deleting group", g._id)
+	//DB.User.find({gid: g._id}).remove(function (e, o) {}) // todo test against
+	DB.User.remove({gid: g._id}) // todo test against
+};
+*/
+
+schema.Group.post('remove',  g => { // delete all users in the group
+	log.dbg("deleted group", g._id)
+	//DB.User.find({gid: g._id}).remove(function (e, o) {}) // todo test against
+	DB.User.remove({gid: g._id}, (e,u)=>{
+		if(e) log.dbg(e)
+		else log.dbg(u.result.n, 'users removed')
+	}) // todo test against
+})
+
+//// DOCUMENT methods
+
+schema.Document.pre('save', function (next) {
+	if (this.isNew) {
+		this.date = Date.now()
+	}
+	this.wasNew = this.isNew
+	next()
+})
+
+/**
+ * ajout / suppresions de documents.
+ * mise à jour du compteur dans la catégorie
+ * TODO : pourrait être membre virtuel de la catégorie
+ */
+schema.Document.post('save', function () {
+	if (this.wasNew) {
+		var cat = this.categorie
+		DB.Document.count({categorie: cat}, function (e, c) {
+			//DB.Category.findOneAndUpdate({ _id : cat}, {nbDocs: c}, {new: true}, function(err, d) {});
+			DB.Category.update({_id: cat}, {nbDocs: c}, function (e, c) {});
+		})
+	}
+})
+
+schema.Document.methods.delete = function (doc) {
+	log.dbg("deletion of", doc.titre1, doc.titre2);
+	DB.Document.count({categorie: doc.categorie}, function (e, c) {
+		DB.Category.update({_id: doc.categorie}, {nbDocs: c}, function (e, c) {
+		});
+	})
+};
+
+
+//// CATEGORIE methods
+
+/**
+ * sauve une catégorie. Télécharge l'image si c'est une url
+ * TODO : fix https et certaine formation d'url avec une query
+ */
+schema.Categorie.pre('save', function (next) {
+	var self = this
+	if (utils.validUrlImg(this.img)) {
+		// then proceed to dl and conversion
+		dl.dl(this.img, function (res_data, file) {
+			log.dbg(file)
+			self.img = settings.UPLOAD_DIR + file
+			sharp(settings.ABS_UPLOAD_DIR + file)
+				.resize(settings.THUMB.WIDTH, settings.THUMB.HEIGHT)
+				.toFile(settings.ABS_UPLOAD_DIR + file + ".png", function (err) {
+					// output.jpg is a 200 pixels wide and 200 pixels high image
+					// containing a scaled and cropped version of input.jpg
+					self.img = settings.UPLOAD_DIR + file + ".png"
+					next()
+				});
+		})
+	}
+	else {
+		//log.dbg(this)
+		next()
+	}
+})
+
+
+schema.Categorie.methods.delete = function (c) {
+	log.dbg("deleting categorie", c.name)
+	DB.Document.find({categorie: c._id}).remove(function (e, d) {})
+};
+
+
+
+//// COMMENTAIRES methods
+
+
+schema.Commentaire.methods.put = function (cmt) {
+	log.dbg("PUT COMMENT!")
+	if (this.temp) { log.dbg('a temp comment') }
+}
+
+schema.Commentaire.post('save', function (next) {})
+
+/** autodate and parent to comment.parentId
+ * !! dont try a 'pre' save call, as the tree plugin as precedence
+ */
+schema.Commentaire.methods.post = function (cmt,next) {
+	// todo : vérifier que le débat est ouvert
+	// todo : déclarer date.now dans la valeur par défat
+	if(!cmt.date) cmt.date = Date.now()
+	if(cmt.parentId) {// c'est un commentaire de débat
+		DB.Comment.findById(cmt.parentId, function (e, p) {
+			if (p) { //double check
+				cmt.parent = p
+				cmt.temp = true
+				cmt.save({})
+				DB.Comment.findOneAndUpdate(
+					{_id:cmt.debat},
+					{lastpostDate:cmt.date},
+					{upsert: false},
+					(e,d) =>{
+						log.dbg('new comment', cmt)
+						//log.dbg("dbt updated", d, cmt.date)
+					})
+				if(next) next()
+			}
+		})
+	}else{ if(next) next() }
+}
+
+
+//// DEBAT methods
+
+
+schema.Debat.pre('save', function (next) {
+	this.dateOuverture = Date.now();
+	this.wasNew = this.isNew
+	next();
+})
+
+
+schema.Debat.post('save', function (/*next*/) {
+	var D = this;
+	log.dbg("New debate open (", D.titre, D._id,')', 'gid=(', D.gids,')','cat=(', D.categorie, 'rootcmt=(',D.rootCmt,')')
+	DB.Group.update({_id: {$in: this.gids}}, {$inc: {openDebates: D.status ? 0 : 1}}, {multi: true}, function (e, G) {})
+	DB.Category.findOneAndUpdate(
+		{_id: this.categorie},
+		{$push: {debats: this._id}},
+		{safe: true, upsert: false},
+		function(err, c) {
+			if(err) log.dbg(err)
+			else log.dbg("Categorie updated", c.name, c._id, 'debats=[', c.debats,']');
+		}
+	);
+})
 
 
 /* TODO
@@ -58,12 +240,36 @@ var DB = {
 	},
 
 	findUser: function (field, next) {
-		log.dbg(field)
 		DB.User.findOne(field, (e, u) => {
 			if (e) log.error(e)
 			if (next) next(u)
 		});
 	},
+
+
+   // for restrictions on Users
+   getUsers : function (req, res) {
+      var gid=req.query.gid
+      log.dbg('asking users of',gid)
+      isLevel(req.user, 600,
+         function () { findUsrs({gid: gid}, function(U) { res.status(200).send(U) }) },
+         function () { // else
+            isLevel(req.user, 500,
+               function() {
+                  if ( !isAdminGroup (gid) )
+                     findUsrs({gid: gid}, function (U) {
+                        res.status(200).send(U)
+                     })
+                  else findUsersPasswordMasked({gid: gid}, function (U) {
+                     log.dbg('requested admin group')
+                     res.status(200).send(U)
+                  })
+               }, //else
+               function() { res.status(401).send('unauthorized') }
+            )
+         }
+      )
+   },
 
 	getGroups: function (req, res /*, next*/) {
 		DB.Group.find((e, g)=>{
@@ -214,7 +420,7 @@ var DB = {
 							{_id: Dx.rootCmt._id},
 							{_id: 1, citation: 1, reformulation: 1, path: 1},
 							(e, C) => {
-								function digAvis1(c, length) {
+								function digAvis(c, length) {
 									c.getChildrenTree(args, (e, Ch)=> {
 										var r = c.toObject()
 										var d = Dx.toObject()
@@ -222,9 +428,8 @@ var DB = {
 										CountAvis(N, Ch)
 										r.count = N
 										for (var attrname in d) {
-											r[attrname] = d[attrname];
-										}
-										//_.each(d, attrname=> r[attrname] = d[attrname] )
+												r[attrname] = d[attrname];
+											}
 										R.push(r)
 										if (++n == length) {
 											res.json(R);
@@ -233,7 +438,7 @@ var DB = {
 								}
 
 								//log.dbg(Dx)
-								digAvis1(C, L)
+								digAvis(C, L)
 							}
 						)
 					})
@@ -299,12 +504,12 @@ var DB = {
 
 
 	AllDebates : function (req, res) {
-
 		DB.Debat.find({})
 		.populate('rootCmt', {_id: 1, citation: 1, reformulation: 1, path: 1})
 		.populate('gids', {name: 1, _id: 1})
 		.populate('categorie',{_id:1,name:1})
 		.exec((err, D)=>{ // don't filter the groups
+
 			var L = D.length;
 			var n = 0;
 			var R = []
@@ -318,7 +523,6 @@ var DB = {
 						digAvis(C, L)
 
 						function digAvis(c, length) {
-
 							c.getChildrenTree(args, function (e, Ch) {
 								var r = c.toObject()
 								var d = Dx.toObject()
@@ -363,15 +567,16 @@ var DB = {
 	},
 
 	delDebate : function (id, next) {
-		DB.Debat.findById(id, (e, d)=>{
-			log.dbg("debat DELETED : (", d.titre, d._id, ") root:",d.rootCmt)
+
+		DB.Debat.findOneAndRemove({_id:id}, (e,d)=>{
+			log.dbg("debat DELETED :", d.titre,d._id)
 			DB.Group.update({_id: {$in: d.gids}}, {
 				$inc: {
 					openDebates: d.status ? 0 : -1,
 					closedDebates: d.status ? -1 : 0
 				}
 			}, {multi: true}, ()=>{ //(e,G)=>{ // todo fix. computed value ^
-				log.dbg('open/close dbt UPDATED after deletion')
+				log.dbg('open/close dbt updated after deletion')
 			})
 			DB.Category.findOneAndUpdate(
 				{_id: d.categorie},
@@ -379,14 +584,19 @@ var DB = {
 				{safe: true, upsert: false},
 				(err, c)=>{
 					if(err) log.dbg(err)
-					else log.dbg("Categorie UPDATED [", c.name,'] dbts=', c.debats);
+					else log.dbg("Categorie UPDATED", c.name);
 				}
 			);
-		}).remove((e,n)=>{ // n=number of deleted occurences
-			if(e) log.dbg(e)
-			else log.dbg(n,'debates deleted')
 			next()
 		})
+		/*
+		DB.Debat.findById(id, (e, d)=>{
+
+		}).remove((e,r)=>{ // n=number of deleted occurences
+			if(e) log.dbg(e)
+			else log.dbg(r.result.n,'debates deleted')
+			next()
+		})*/
 	},
 
 	login : function (login, password, cbk) {
@@ -427,7 +637,7 @@ var DB = {
 
 module.exports = DB
 
-require('./db/middleware')
+
 
 function findCats(reply, all, gid) {
 
@@ -600,10 +810,10 @@ function saveDoc(titre1, titre2, texte, cat) {
 
 
 /**
- check every 10 seconds for messages to upadte
+ check every 20 seconds for messages to update
  */
 var CronJob = require('cron').CronJob;
-new CronJob('*/10 * * * * *', ()=>{ postTempComment()
+new CronJob('*/20 * * * * *', ()=>{ postTempComment()
 }, null, true, 'Europe/Paris');
 
 
@@ -611,7 +821,7 @@ new CronJob('*/10 * * * * *', ()=>{ postTempComment()
  update temporary messages
  */
 var postTempComment = function(){
-	log.silly('updating temp posts '+ Date.now())
+	//log.dbg('updating temp posts '+ Date.now())
 	DB.Comment.find(
 		{
 			$and: [
@@ -672,3 +882,23 @@ DB.Group.findOne( {name: settings.GROUP_PUBLIC },
 			' absent de la db. Connectez vous au panneau d\'admin')
 	}
 )
+
+
+// masked pass
+var GAdmins;
+var GAdminsIds = []
+function isAdminGroup(gid) {
+   //log.dbg(gid,GAdminsIds, GAdminsIds.indexOf(gid))
+   return GAdminsIds.indexOf(gid) != -1
+}
+
+DB.Group.find({name: {$in: settings.ADMIN_GROUP} }, function (e, G) {
+   //log.dbg("groupe PUBLIC:", G.name, "/", G.membres.length, "inscrits")
+   exports.GAdmins = GAdmins = G;
+   log.info("Groupes Admins :")
+   if(G) {
+      _.each(G,function(g) { log.dbg(g.name, g._id) ; GAdminsIds.push(String(g._id))  } )
+      if(G.length==0) { log.warn('aucun!')}
+      exports.GAdminsIds = GAdminsIds;
+   }
+})
