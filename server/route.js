@@ -15,7 +15,7 @@
 import DB from './db'
 import * as ACL from './routes/acl'
 
-var   settings = require('../settings').configuration
+var   settings = require('../settings')
 	, _   = require('underscore')
 	, log = require('./log')
 	, io  = require('./messaging')
@@ -29,7 +29,7 @@ var   settings = require('../settings').configuration
 	, uploadHandlerXls = require('./upload').uploadHandlerXls
 	, invitationHandler = require('./routes/invitation')
 	, login = require('./routes/login')
-	, traceRequest = require('./routes/tracerequest')
+	, getIp = require('./routes/tracerequest').getIp
 	, userListing = require('./routes/userlisting')
 
 	//, methodOverride = require('method-override');
@@ -42,7 +42,8 @@ module.exports = function (app) {
 	// for CORS middleware
 	// app.use(methodOverride());
 	app.use(function(req, res, next) {
-		log.info(req.method, req.url,req.params,req.query)
+		//traceRequest(req)
+		//log.debug(req.method, req.url,req.params,req.query)
 		//res.header("Access-Control-Allow-Origin", "*");
 		//res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		next();
@@ -53,11 +54,11 @@ module.exports = function (app) {
 
 	app.use(function (err, req, res, next) {
 		if (err.name === 'UnauthorizedError') {
-			log.dbg("anonymous access", req.url) //, req.headers ['user-agent']);
+			log.dbg(getIp(req),"anon access", req.url) //, req.headers ['user-agent']);
 
 			if (( settings.MODE_PUBLIC || req.user )
 			// simply ask for a user to proceed
-			//	&& req.header('app') == 'dialoguea'
+			   && req.header('app') == 'dialoguea'
 			)
 			{
 				next()
@@ -76,32 +77,31 @@ module.exports = function (app) {
 		}
 	});
 
-	app.get('/api/hi', login.hello )
-
-	app.get("/api/adm.js", function (req, res, next) {
-		traceRequest(req)
-		restricted(req,res, ()=>{
-			res.sendFile( settings.ADMIN_MODULE )
-		})
-		//res.sendFile(__dirname + '/views/adminmodule.min.js')
-	});
-
 	function restricted(req,res,next) {
 		try {
-			ACL.isAdmin(req.user, ()=>{ next()}, (e)=>{ log.erroràcat    (e);unauthorized(req, res)})
+			log.dbg(getIp(req),'accessing restricted')
+			ACL.isAdmin(req.user, ()=>next(), ()=>{ unauthorized(req, res)})
 		}
 		catch(err) {
-			log.dbg('ERROR:',err)
+			log.dbg(err)
 			res.send('server error')
 		}
 	}
 
 	function unauthorized(req,res) {
-		log.warn("unauthorized access to",req.url,'user:',req.user);
+		log.warn(getIp(req),"unauthorized access to",req.url,'user:',req.user);
 		return res.status(401).send();
 	}
 
+	app.get('/api/hi', login.hello )
 
+	app.get("/api/adm.js", function (req, res, next) {
+		log.dbg(getIp(req),'admin module reqby', req.user)
+		restricted(req,res, ()=>{
+			res.sendFile( settings.ADMIN_MODULE )
+		})
+		//res.sendFile(__dirname + '/views/adminmodule.min.js')
+	});
 	app.post('/api/invite', invitationHandler )
 	app.post('/login', login.reqlogin );
 	app.post('/api/newuserlist', userListing )
@@ -118,26 +118,14 @@ module.exports = function (app) {
 		app.post('/api/'+url, function (req, res, next) {
 			log.dbg("posting to",url)
 			ACL.isAdmin(req.user,
-				next(),
+				()=>next(),
 				()=>{log.dbg("restricted access")})
 		});
 	})
 
 
-	/*var mongoRest = new MongoRest( app, {urlPrefix: '/api'} )
-	 .collection(DB.Group,'groups', {
-	 prePostHandler : function(req,res,next) {
-	 console.log('gotcha')
-	 }
-	 })
-	 .collection(DB.Categorie,'cat', {
-	 prePostHandler : function(req,res,next) {
-	 console.log('take it easy')
-	 }
-	 })*/
-
 	var bridgeGuard = function(req,res,next) {
-		//traceRequest(req)
+		log.dbg(getIp(req), req.user && req.user.nom || 'anon', req.url)
 		next()
 	}
 
@@ -162,7 +150,7 @@ module.exports = function (app) {
 
 	// Mount all the resource on /api prefix
 	//var bridge = new MongoRest(app, {urlPrefix: '/api/', requestPrehandler: bridgeGuard, force: 'user'});
-	var bridge = new MongoRest (app, { urlPrefix : '/api/'});
+	var bridge = new (require('./mongorest'))(app, { urlPrefix : '/api/', requestPrehandler: bridgeGuard});
 
 	// Expose the collections via REST
 	// TODO  : specific RULES
@@ -181,8 +169,7 @@ module.exports = function (app) {
 		}
 	)
 
-
-	function Route(method, route, func, fallback) {
+	function Route(method, route, func) {
 		app[method](
 			route,
 			(req,res)=>{
@@ -192,55 +179,44 @@ module.exports = function (app) {
 						u => func(
 							req.body,
 							u._id,
-							ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
+							ok => { res.status(200).send(ok) },
 							ko => { log.dbg(ko); res.status(400).send(ko) }
 						)
 					)
 				}
 				else {
-					if(fallback) {
-						fallback(req.body,null,
-								ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
-								ko => { log.dbg(ko); res.status(400).send(ko) }
-						)
-					}
-					else {
-						log.dbg('missing user or uid')
-						res.status(400).send('unauthorized')
-					}
+					log.dbg('missing user or uid')
+					res.status(400).send('unauthorized')
 				}
 			})
 	}
 
-	function RouteAdm(method, route, func, fallback) {
+	function RoutePublic(method, route, func) {
 		app[method](
 			route,
 			(req,res)=>{
 				if(req.user && req.user.uid) {
-					ACL.isAdmin(
+					ACL.getUser(
 						req.user.uid,
-							u => func(
+						u => func(
 							req.body,
 							u._id,
-								ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
-								ko => { log.dbg(ko); res.status(400).send(ko) }
+							ok => { res.status(200).send(ok) },
+							ko => { log.dbg(ko); res.status(400).send(ko) }
 						)
 					)
 				}
 				else {
-					if(fallback) {
-						fallback(req.body,null,
-								ok => { /*log.dbg(ok);*/ res.status(200).send(ok) },
-								ko => { log.dbg(ko); res.status(400).send(ko) }
+					func(
+							req.body,
+							null,
+							ok => { res.status(200).send(ok) },
+							ko => { log.dbg(ko); res.status(400).send(ko) }
 						)
-					}
-					else {
-						log.dbg('missing user or uid')
-						res.status(400).send('unauthorized')
-					}
 				}
 			})
 	}
+
 
 	// TODO authorisations
 	var adminBridge = new MongoRest( app,
@@ -249,14 +225,12 @@ module.exports = function (app) {
 			requestPrehandler: restricted
 		});
 
-	adminBridge.addResource('users', DB.User);
+	adminBridge.addResource('users', DB.User, {hide : ['__v','hash']});
 	adminBridge.addResource('cat', DB.Category, {
 		query: { _id:0 }
 	});
 
-	//app.get('/api/cdebats', DB.cDbts); // isolate one comment, or create a new debate around it
-
-	Route('get','/api/cdebats', DB.cDbts, DB.cDbts)
+	RoutePublic('get','/api/cdebats', DB.cDbts)
 
 	app.param('cmtId', DB.cmtTree);
 	app.param('catId', DB.catId);
@@ -266,11 +240,9 @@ module.exports = function (app) {
 	//app.get('/api/cdebats', DB.cDbts);//with req.user.gid
 
 	app.get('/api/listedebats', DB.listeDebats);//with req.user.gid
+
 	app.get('/api/opendebats', DB.grpDbts);//with req.user.gid
 	app.get('/api/grpcatdbts/:catId', DB.grpCatDbts);//with req.user.gid
-
-	//RouteAdm('get','/apiadm/debats', DB.AllDebates)
-
 	app.get('/apiadm/debats', DB.AllDebates);//with req.user.gid
 
 	// nom prenom login password groupe
@@ -298,10 +270,10 @@ module.exports = function (app) {
 		})
 	})
 
-	app.post('/upimgcategory',  function (req, res) { uploadHandlerImg.upload(req, res); });
-	app.post('/updbtimg',       function (req, res) { uploadHandlerDbtImg.upload(req, res); });
-	app.post('/uploadXls',      function (req, res) { uploadHandlerXls.upload(req, res); });
-	app.post('/updebatmedia',       function (req, res) { uploadHandlerDebatMedia.upload(req, res); });
+	app.post('/upimgcategory',  function (req, res) { log.dbg(req.user, 'upload img cat') ; uploadHandlerImg.receiveUpload(req, res); });
+	app.post('/updbtimg',       function (req, res) { log.dbg(req.user, 'upload dbt img') ; uploadHandlerDbtImg.receiveUpload(req, res); });
+	app.post('/uploadXls',      function (req, res) { log.dbg(req.user, 'upload user listing') ; uploadHandlerXls.receiveUpload(req, res); });
+	app.post('/updebatmedia',   function (req, res) { uploadHandlerDebatMedia.receiveUpload(req, res); });
 	app.get('/progressDbtImg',  function (req, res) { uploadHandlerDbtImg.progress(req, res); });
 	app.get('/progress',        function (req, res) { uploadHandler.progress(req, res); });
 
