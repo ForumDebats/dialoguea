@@ -8,8 +8,8 @@ or non-profit organisation.
 Commercial uses of this software are liable of a commercial license and require express
 consent of the following authors.
 
-Deilveries of the software and its derivative should hold this notice
-and the credits to its  original authors : 
+Deliveries of the software and its derivative should hold this notice
+and the credits to its original authors : 
 
 © 2016-2019 : Philippe Estival, Jean Sallantin, Claire Ollagnon, Véronique Pinet
 
