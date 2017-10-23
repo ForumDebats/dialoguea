@@ -19,7 +19,7 @@ Commentaires de textes et débats collaboratifs
 - installer [[https://github.com/remy/nodemon][nodemon]]
   =npm install -g nodemon=
 - configuer le fichier =settings.js=
-- ajouter des utilisateurs admin : =node server/adduser=
+- ajouter des utilisateurs admin : =npm run adduser=
 - outils de minifications JS : voir dans =scripts/install-grunt.js=
 
 ** démarrer le serveur
