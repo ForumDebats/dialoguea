@@ -7,7 +7,7 @@ Commentaires de textes et débats collaboratifs
 
 - node version manager : [[https://github.com/creationix/nvm][nvm]]
 - sélectionner la version de node :
-  =nvm install 4.2.3=
+  =nvm install 6.9.4=
 - libvips :
   requis par [[https://github.com/lovell/sharp.git][sharp]] les conversions des vignettes et d'images. 
   =./scripts/install-libvips=
