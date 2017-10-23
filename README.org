@@ -23,7 +23,7 @@ Commentaires de textes et débats collaboratifs
 - outils de minifications JS : voir dans =scripts/install-grunt.js=
 
 ** démarrer le serveur
-  =nodemon server=
+  =npm run dev=
 
 
 
