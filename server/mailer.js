@@ -10,10 +10,11 @@
  * mails Dialoguea auto send
  */
 
+import settings from "../settings";
+
 var   log       = require('./log')
 	, nodemailer = require('nodemailer')
 	, wellknown  = require('nodemailer-wellknown') // https://github.com/andris9/nodemailer-wellknown
-   , settings   = require('../settings')
 	, config     = wellknown(settings.MAILER.provider)
 	, SERVER     = settings.PROTOCOL + settings.SERVER
 

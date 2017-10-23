@@ -104,7 +104,7 @@ export function hello (req, res) {
 		ACL.getUser(req.user.uid,
 	            (u)=> {
 	            	if(u.status!=-1) {
-	            		log.info(req.Ip,u.login, "logged in")
+	            		log.info(u.login, "logged in")
 						res.status(200).send('HI') // generate a key here
 					}
 	            },

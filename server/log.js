@@ -3,7 +3,7 @@
  *
  * db.js
  * phil.estival@free.fr
- * $Date$:2016/09/09 14:01:20 $
+ * Date:<2017/10/20 18:22:48>
  *
  * logging utility not quite perfect
  */
@@ -11,7 +11,6 @@
 
 import callsite from 'callsite'
 import winston from 'winston'
-//import { configuration as settings } from '../settings'
 import settings from '../settings'
 import path from 'path'
 

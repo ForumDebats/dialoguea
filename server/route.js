@@ -14,9 +14,9 @@
 
 import DB from './db'
 import * as ACL from './routes/acl'
+import settings from '../settings'
 
-var   settings = require('../settings')
-	, _   = require('underscore')
+var _   = require('underscore')
 	, log = require('./log')
 	, io  = require('./messaging')
 	, utils = require('./utils')
@@ -57,7 +57,7 @@ module.exports = function (app) {
 			log.dbg(getIp(req),"anon access", req.url) //, req.headers ['user-agent']);
 
 			if (( settings.MODE_PUBLIC || req.user )
-			// simply ask for a user to proceed
+			   // ask for a user to proceed
 			   && req.header('app') == 'dialoguea'
 			)
 			{
@@ -100,8 +100,8 @@ module.exports = function (app) {
 		restricted(req,res, ()=>{
 			res.sendFile( settings.ADMIN_MODULE )
 		})
-		//res.sendFile(__dirname + '/views/adminmodule.min.js')
 	});
+
 	app.post('/api/invite', invitationHandler )
 	app.post('/login', login.reqlogin );
 	app.post('/api/newuserlist', userListing )

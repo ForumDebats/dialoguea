@@ -27,9 +27,6 @@ var
 
 mongoose.Promise = require('bluebird');
 
-//require('./db/middleware')
-
-
 //// USER methods
 
 schema.User.methods.post = function (entity) {
