@@ -10,23 +10,6 @@
  * admin section routing
  */
 
- /*
-ok
-var loadJS = function(url, implementationCode, location){
-    //url is URL of external file, implementationCode is the code
-    //to be called from the file, location is the location to
-    //insert the <script> element
-
-    var scriptTag = document.createElement('script');
-    scriptTag.src = url;
-
-    scriptTag.onload = implementationCode;
-    scriptTag.onreadystatechange = implementationCode;
-
-    location.appendChild(scriptTag);
-};
-loadJS('admindeps.js',null,document.body)
-*/
 
 
 var UserFactory = ['$resource', function ($resource) {
@@ -39,7 +22,7 @@ var UserFactory = ['$resource', function ($resource) {
 }];
 
 var app = angular.module('adminDialoguea',
-	['ui.router', 'ngResource', 'ngAnimate','as.sortable','ui.tinymce','ngTouch'])
+	['ui.router', 'ngResource', 'ngAnimate','ui.tinymce','ngTouch'])
 
 	.factory('authInterceptor', AuthFactory)
 	.factory('Broadcast', BroadcastFactory)
@@ -81,25 +64,17 @@ var app = angular.module('adminDialoguea',
 			}
 		}
 	})
-	/*.filter('search', function (row) {
-		return 0 //((row.dateFermeture < Date.now())) ;
-	})*/
-
 
 	.directive('errSrc',errSrc)
 	.directive('getImg',getImg)
 	.controller('AdmCategoriesCtrl',AdmCategoriesCtrl)
 	.controller('AdmDebatsCtrl', AdmDebatCtrl)
 	.controller('DocListCtrl',DocListCtrl)
-	/*.controller('DocsListCtrl',DocsListCtrl)
-	.controller('DocsCtrl',DocsCtrl)
-	.controller('DocEditCtrl',DocEditCtrl)*/
 	.controller('GroupsListCtrl',GroupsListCtrl)
 	.controller('GroupCtrl',GroupCtrl)
 	.controller('UsersCtrl',UsersCtrl)
 	.controller('OpenDebatCtrl',OpenDebatCtrl)
 	.controller('PreDebatCtrl',PreDebatCtrl)
-
 	.config(['$httpProvider', function ($httpProvider) {
 		$httpProvider.interceptors.push('authInterceptor');
 	}])

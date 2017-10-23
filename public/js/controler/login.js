@@ -34,19 +34,18 @@ function UserStorage(loginData, $window, $rootScope, $sce) {
 	storage.user = JSON.stringify(loginData)
 	$rootScope.user = JSON.parse(storage.user);
 	$rootScope.indicator = $sce.trustAsHtml(storage.user.indicator)
-	$rootScope.showLoginWindow = Settings.default_login_policy;  // set it to true by default IN THE CONTROLLER INIT to force login on opening
+	$rootScope.showLoginWindow = false;  // set it to true by default IN THE CONTROLLER INIT to force login on opening
 	$rootScope.loggedIn = false;
 }
 
 
 angular.module('login', ['oc.lazyLoad'])
-
-	/*.config(['$ocLazyLoadProvider', function ($ocLazyLoadProvider) {
+	.config(['$ocLazyLoadProvider', function ($ocLazyLoadProvider) {
 		$ocLazyLoadProvider
 			.config({
 				debug: true
 			})
-	}])*/
+	}])
 
 	.directive('login', function () {
 		return {
@@ -88,7 +87,9 @@ angular.module('login', ['oc.lazyLoad'])
 					.error(function () {
 						delete storage.user;
 						$rootScope.loggedIn = false;
-						$rootScope.showLoginWindow = !Settings.mode_public;
+						// ! mode public
+                        if(Settings.default_login_policy)
+							$rootScope.showLoginWindow = true;
 						$rootScope.user = null;
 					})
 					.finally(function () {
@@ -139,7 +140,7 @@ angular.module('login', ['oc.lazyLoad'])
 				$location.path("/");
 				//$state.go($state.current, {}, {reload: true});
 
-				$rootScope.showLoginWindow = Settings.default_login_policy ; // TRUE if default is login policy // Settings.defaultLogin
+				$rootScope.showLoginWindow = Settings.default_login_policy ;
 			};
 
 			L.closeLoginWindow = function () {
@@ -179,8 +180,10 @@ angular.module('login', ['oc.lazyLoad'])
 							}
 							el.onload = el.onreadystatechange = null;
 							loaded = true;
-							$ocLazyLoad.inject("admindialoguea")
-							$ocLazyLoad.toggleWatch(false)
+							$ocLazyLoad.inject("adminDialoguea");
+							//console.log(x)
+							//console.log(path,script,'inject');
+							$ocLazyLoad.toggleWatch(false);
 							el.parentNode.removeChild(el);
 							L.panel = $sce.trustAsHtml($rootScope.user.panel)
 						};
