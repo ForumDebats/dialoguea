@@ -892,10 +892,11 @@ function isAdminGroup(gid) {
 DB.Group.find({name: {$in: settings.ADMIN_GROUP} }, function (e, G) {
    //log.dbg("groupe PUBLIC:", G.name, "/", G.membres.length, "inscrits")
    exports.GAdmins = GAdmins = G;
-   log.info("Groupes Admins :")
    if(G) {
-      _.each(G,function(g) { log.dbg(g.name, g._id) ; GAdminsIds.push(String(g._id))  } )
-      if(G.length==0) { log.warn('aucun!')}
+      _.each(G,function(g) { 
+         //log.dbg(g.name, g._id); 
+         GAdminsIds.push(String(g._id))  } )
+      if(G.length==0) { log.warn('missing admin group!')}
       exports.GAdminsIds = GAdminsIds;
    }
 })

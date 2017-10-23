@@ -7,6 +7,7 @@
   "license": "MIT/GPL",
   "scripts": {
     "dev": "nodemon -w ./server --exec \"babel-node server --presets es2015,stage-0\"",
+    "adduser": "nodemon -w ./server/adduser --exec \"babel-node server/adduser --presets es2015,stage-0\"",
     "build": "babel server -s -D -d dist --presets es2015,stage-0",
     "start": "node dist",
     "prestart": "npm run -s build",
