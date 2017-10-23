@@ -67,7 +67,10 @@ module.exports = function (grunt) {
 			admin: {
 				src: [
 					"public/js/factory/broadcast.js",
-					"public/js/controler/admin/debats.js",
+                    "public/js/controler/admin/routes.js",
+                    "public/js/controler/admin/directives.js",
+                    "public/js/controler/admin/predebat.js",
+                    "public/js/controler/admin/debats.js",
 					"public/js/controler/admin/opendebat.js",
 					"public/js/controler/admin/groups.js",
 					"public/js/controler/admin/categories.js",
