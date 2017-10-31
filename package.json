@@ -6,7 +6,7 @@
   "subdomain": "mood.dialoguea",
   "license": "MIT/GPL",
   "scripts": {
-    "dev": "nodemon -w ./server --exec \"babel-node server --presets es2015,stage-0\"",
+    "dev": "nodemon -w ./server --dialoguea --exec \"babel-node server --presets es2015,stage-0\"",
     "adduser": "nodemon -w ./server/adduser --exec \"babel-node server/adduser --presets es2015,stage-0\"",
     "build": "babel server -s -D -d dist --presets es2015,stage-0",
     "start": "node dist",
@@ -45,7 +45,7 @@
     "winston": "latest"
   },
   "devDependencies": {
-    "babel-cli": "^6.18.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.9.0",
     "babel-preset-env": "^1.1.8",
     "babel-preset-es2015": "^6.18.0",
