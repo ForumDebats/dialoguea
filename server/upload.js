@@ -9,9 +9,8 @@
  * upload handlers
  */
 
-var
-	settings = require('../settings')
-	, uploadProgress = require('node-upload-progress')// todo : check file size
+import settings from '../settings';
+var uploadProgress = require('node-upload-progress')// todo : check file size
 	, sharp = require('sharp')
 	, log = require('./log')
 	, fs = require('fs')
